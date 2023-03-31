@@ -1,3 +1,11 @@
+# Security
+spring:
+  security:
+    user:
+      name: admin
+      password: admin
+
+# Postgresql
 app:
   datasource:
     main:
@@ -7,17 +15,6 @@ app:
       password: 1
       pool-size: 30
 
+# Server
 server:
   port: 3001
-error:
-  include-binding-errors: always
-  include-message: always
-# server:
-#   port: 3001
-
-# spring:
-#   datasource:
-#     url: jdbc:postgresql://localhost:5432/bookstore
-#     username: root
-#     password: 1
-#     driver-class-name: org.postgresql.Driver
