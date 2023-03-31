@@ -1,0 +1,23 @@
+app:
+  datasource:
+    main:
+      driver-class-name: org.postgresql.Driver
+      jdbc-url: jdbc:postgresql://localhost:5432/bookstore
+      username: root
+      password: 1
+      pool-size: 30
+
+server:
+  port: 3001
+error:
+  include-binding-errors: always
+  include-message: always
+# server:
+#   port: 3001
+
+# spring:
+#   datasource:
+#     url: jdbc:postgresql://localhost:5432/bookstore
+#     username: root
+#     password: 1
+#     driver-class-name: org.postgresql.Driver
