@@ -1,4 +1,4 @@
-package com.example.bookstore.services;
+package com.example.bookstore.services.User;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.bookstore.models.UserEntity;
+import com.example.bookstore.services.Book.BookService;
 
 import org.slf4j.LoggerFactory;
 
@@ -22,11 +23,14 @@ import org.slf4j.Logger;
 @Service
 public class UserService {
     Logger logger = LoggerFactory.getLogger(BookService.class);
-    private final JdbcTemplate jdbcTemplate;
 
-    public UserService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    // public  getAllUsers()
+
+    // private final JdbcTemplate jdbcTemplate;
+    
+    // public UserService(JdbcTemplate jdbcTemplate) {
+    //     this.jdbcTemplate = jdbcTemplate;
+    // }
 
     // @Override
     // public UserDetails loadUserByUsername(String username) throws
@@ -42,18 +46,21 @@ public class UserService {
     // return new User("thangphan", "1", null);
     // }
 
-    public List<User> getUsers() {
-        logger.info("getUsers service is running...");
-        String sql = "select * from users where username=?";
-        List<User> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper(User.class));
-        return users;
-    }
 
-    public UserEntity getUserByUsername(String username) throws SQLException {
-        logger.info("getUserByUsername service is running...");
-        String sql = "select * from users where username=? limit=1";
-        List<UserEntity> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper(User.class));
-        System.out.println("Users from db :> " + users);
-        return users.get(0);
-    }
+
+    // public List<UserEntity> getUsers() {
+    //     logger.info("getUsers service is running...");
+    //     String sql = "select * from users where username=?";
+    //     List<UserEntity> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper(UserEntity.class));
+    //     return users;
+    // }
+
+    // public UserEntity getUserByUsername(String username) throws SQLException {
+    //     logger.info("getUserByUsername service is running...");
+    //     String sql = "select * from users where username=? limit=1";
+    //     List<UserEntity> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper(UserEntity.class));
+    //     System.out.println("Users from db :> " + users);
+    //     return users.get(0);
+    // }
+
 }
