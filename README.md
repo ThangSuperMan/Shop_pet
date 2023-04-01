@@ -1,1 +1,1 @@
-- How to use Postgresql with Data JDBC(Spring book library).
+- How to use JWT and Postgresql with Data JDBC(Spring book library).

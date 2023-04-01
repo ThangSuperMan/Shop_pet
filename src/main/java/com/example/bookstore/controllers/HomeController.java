@@ -22,11 +22,11 @@ public class HomeController {
     private final BookService bookService;
 
     public HomeController(BookService bookService) {
-        System.out.println("Bookservice bean from tomcat container :>> " + bookService);
+        logger.info("Bookservice bean from tomcat container :>> " + bookService);
         this.bookService = bookService;
     }
 
-    @RequestMapping("/")
+    @RequestMapping()
     public String home() {
         return "Home page";
     }
