@@ -1,4 +1,4 @@
-package com.example.bookstore.config;
+package com.example.shop_pet.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 

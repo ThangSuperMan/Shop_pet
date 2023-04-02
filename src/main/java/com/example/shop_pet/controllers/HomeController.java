@@ -1,4 +1,4 @@
-package com.example.bookstore.controllers;
+package com.example.shop_pet.controllers;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,9 +6,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.bookstore.models.Book;
-import com.example.bookstore.services.Book.BookService;
+import com.example.shop_pet.models.Book;
+import com.example.shop_pet.services.Book.BookService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -61,7 +59,7 @@ public class HomeController {
             logger.info("Insert book successfully");
             return new ResponseEntity<>(book, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatusCode.valueOf(404));
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PutMapping("/book_update/{id}")

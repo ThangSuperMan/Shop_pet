@@ -1,15 +1,17 @@
-package com.example.bookstore.dto;
+package com.example.shop_pet.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-public class AuthRequest {
+@NoArgsConstructor
+@AllArgsConstructor
+public class User {
+    private Long id;
     private String username;
     private String password;
+    private String email;
 }

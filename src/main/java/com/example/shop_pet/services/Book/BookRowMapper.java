@@ -1,15 +1,12 @@
-package com.example.bookstore.services.Book;
+package com.example.shop_pet.services.Book;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetTime;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.Nullable;
 
-import com.example.bookstore.models.Book;
+import com.example.shop_pet.models.Book;
 
 public class BookRowMapper implements RowMapper<Book> {
     @Override

@@ -1,4 +1,4 @@
-package com.example.bookstore.services.Jwt;
+package com.example.shop_pet.utils;
 
 import java.security.Key;
 import java.util.Date;
@@ -6,18 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.plaf.basic.BasicSplitPaneUI.KeyboardUpLeftHandler;
-
-import org.springframework.stereotype.Component;
-
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import org.springframework.stereotype.Component;
+
 @Component
-public class JwtService {
+public class JwtUtils {
     String SECRET_KEY = "2F413F442A472D4B6150645367566B59703373367639792442264529482B4D62";
 
     public String generateToken(String username) {

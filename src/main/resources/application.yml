@@ -6,7 +6,7 @@ spring:
       password: admin
 
 # Jwt
-jwt: 
+jwt:
   secret: secretkey123
 
 # Postgresql
@@ -14,7 +14,7 @@ app:
   datasource:
     main:
       driver-class-name: org.postgresql.Driver
-      jdbc-url: jdbc:postgresql://localhost:5432/bookstore
+      jdbc-url: jdbc:postgresql://localhost:5432/shop_pet
       username: root
       password: 1
       pool-size: 30
