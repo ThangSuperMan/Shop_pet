@@ -29,7 +29,6 @@ public class BookService {
         return books;
     }
 
-
     public Optional<Book> selectBookById(Long id) {
         logger.info("selectBookById service is running...");
         String sql = """

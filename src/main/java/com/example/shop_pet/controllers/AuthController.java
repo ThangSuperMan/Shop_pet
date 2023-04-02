@@ -26,7 +26,7 @@ public class AuthController {
     private final UserService userService;
 
     public AuthController(JwtUtils jwtUtils, UserService userService) {
-        this.jwtUtils = jwtUtils ;
+        this.jwtUtils = jwtUtils;
         this.userService = userService;
     }
 
@@ -36,26 +36,45 @@ public class AuthController {
     }
 
     // USER
-    @GetMapping("/login") 
+    @GetMapping("/login")
     public String userLoginPage() {
         return "<strong>login page</strong>";
     }
 
     // ADMIN
-    @GetMapping("/admin/login") 
+    @GetMapping("/admin/login")
     public String adminLoginPage() {
         return "<strong>login page</strong>";
     }
 
+    public Boolean isSamePassword(String password, String confirmPassword) {
+        if (password == confirmPassword) {
+            return true;
+        }
+        return false;
+    }
+
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody User user) {
+    public ResponseEntity<String> signup(@RequestBody User user) {
         logger.info("Signup AuthController is running...");
+        if (!userService.isUsernameExist(user.getUsername())) {
+            String message = "Username: " + user.getUsername() + " exists, please choose another one!";
+            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (!isSamePassword(user.getPassword(), user.getConfirmPassword())) {
+            String message = "Password and confirm password does not match, make sure you typed it correctly!";
+            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         int result = userService.insertUser(user);
         if (result > 0) {
             logger.info("Insert account successfully");
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            String message = "Signup successfully, now you can login, enjoy :)";
+            return new ResponseEntity<>(message, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        String message = "Username: " + user.getUsername() + " exists, please choose another one!";
+        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/login")

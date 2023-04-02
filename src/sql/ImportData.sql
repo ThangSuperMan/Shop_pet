@@ -13,7 +13,7 @@ create table if not exists books (
 insert into books (title, author, price, created_at)
 values ('Love for the imperfect things', 'Thang Jenny', 2.400, now());
 
-create type if not exists role_enum as enum ('ADMIN', 'USER');
+create type role_enum as enum ('ADMIN', 'USER');
 
 create table if not exists users (
     id serial,
@@ -26,6 +26,9 @@ create table if not exists users (
     unique(username),
     primary key (id)
 );
+
+insert into users (username, password, email, role) values ('thangphan', '1', 'thang@gmail.com', 'ADMIN');
+insert into users (username, password, email, role) values ('ngocphan', '1', 'ngoc@gmail.com', 'USER');
 
 -- create or replace function on_update_user()
 --     return trigger
