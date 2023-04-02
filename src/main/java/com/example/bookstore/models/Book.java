@@ -14,16 +14,10 @@ public class Book {
     private String title;
     private String author;
     private float price;
-
-    // protected Book(String title, String author, float price) {
-    //     this.id = id;
-    //     this.title = title;
-    //     this.author = author;
-    //     this.price = price;
-    // }
+    private String createdAt;
 
     @Override
     public String toString() {
-        return "book [" + title + ", " + author + ", $" + price + "]";
+        return "book [" + title + ", " + author + ", $" + price + ", created_at " + createdAt + "]";
     }
 }

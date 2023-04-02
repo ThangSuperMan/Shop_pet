@@ -11,14 +11,13 @@ import org.springframework.stereotype.Repository;
 
 import com.example.bookstore.models.Book;
 
+import lombok.RequiredArgsConstructor;
+
 @Repository
+@RequiredArgsConstructor
 public class BookService {
     Logger logger = LoggerFactory.getLogger(BookService.class);
     private final JdbcTemplate jdbcTemplate;
-
-    public BookService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public List<Book> selectBooks() {
         logger.info("selectBooks service is running...");
@@ -26,8 +25,8 @@ public class BookService {
                 SELECT *
                 FROM books
                 """;
-        List<Book> book = jdbcTemplate.query(sql, new BookRowMapper());
-        return book;
+        List<Book> books = jdbcTemplate.query(sql, new BookRowMapper());
+        return books;
     }
 
 

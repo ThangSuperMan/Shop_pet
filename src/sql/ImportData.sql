@@ -5,7 +5,7 @@ create table if not exists books (
     title varchar(45) not null,
     author varchar(45) not null,
     price real not null,
-    created_at date not null default now(),
+    created_at timestamp not null default now(),
     unique(title),
     primary key (id)
 );

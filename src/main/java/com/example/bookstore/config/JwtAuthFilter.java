@@ -22,21 +22,23 @@
 // import jakarta.servlet.ServletException;
 // import jakarta.servlet.http.HttpServletRequest;
 // import jakarta.servlet.http.HttpServletResponse;
+// import lombok.RequiredArgsConstructor;
 
 // @Component
+// @RequiredArgsConstructor
 // class JwtAuthFilter extends OncePerRequestFilter {
 //     Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
 
 //     UserDetailsService userDetailsService;
 
-//     public JwtAuthFilter(UserDetailsService userDetailsService) {
-//         logger.info("User defailt service from bean :>> " + userDetailsService);
-//         this.userDetailsService = userDetailsService;
-//     }
+//     // public JwtAuthFilter(UserDetailsService userDetailsService) {
+//     //     logger.info("User defailt service from bean :>> " + userDetailsService);
+//     //     this.userDetailsService = userDetailsService;
+//     // }
 
-//     public JwtAuthFilter() {
-//         logger.info("One request just came!");
-//     }
+//     // public JwtAuthFilter() {
+//     //     logger.info("One request just came!");
+//     // }
 
 //     @Override
 //     protected void doFilterInternal(

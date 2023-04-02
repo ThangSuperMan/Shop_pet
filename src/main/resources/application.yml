@@ -5,6 +5,10 @@ spring:
       name: admin
       password: admin
 
+# Jwt
+jwt: 
+  secret: secretkey123
+
 # Postgresql
 app:
   datasource:

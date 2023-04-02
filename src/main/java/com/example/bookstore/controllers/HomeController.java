@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,17 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bookstore.models.Book;
 import com.example.bookstore.services.Book.BookService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/v1")
+@RequiredArgsConstructor
 public class HomeController {
     Logger logger = LoggerFactory.getLogger(BookService.class);
 
     private final BookService bookService;
-
-    public HomeController(BookService bookService) {
-        logger.info("Bookservice bean from tomcat container :>> " + bookService);
-        this.bookService = bookService;
-    }
 
     @RequestMapping("/greedy")
     public String hello() {
@@ -49,8 +48,6 @@ public class HomeController {
     public ResponseEntity<List<Book>> getAllBooks() {
         logger.info("getAllBooks controller is running...");
         List<Book> books = bookService.selectBooks();
-        // List<Book> books = bookRepository.findAll();
-        System.out.println("books from db :>> " + books);
         if (books.size() > 0) {
             return new ResponseEntity<>(books, HttpStatus.OK);
         }
