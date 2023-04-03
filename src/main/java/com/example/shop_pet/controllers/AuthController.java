@@ -104,12 +104,13 @@ public class AuthController {
     public String loginAndGetLogin(@RequestBody AuthRequest authRequest) {
         logger.info("loginAndGetLogin AuthController is running...");
         System.out.println("authRequest :>> " + authRequest);
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        System.out.println("authentication. isAuthenticated():>> " + authentication.isAuthenticated());
-        if (authentication.isAuthenticated()) {
-            return jwtUtils.generateToken(authRequest.getUsername());
-        }
-        throw new UsernameNotFoundException("Invalid user request!");
+        // Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+        // System.out.println("authentication. isAuthenticated():>> " + authentication.isAuthenticated());
+        return jwtUtils.generateToken(authRequest.getUsername());
+        // if (authentication.isAuthenticated()) {
+        //     return jwtUtils.generateToken(authRequest.getUsername());
+        // }
+        // throw new UsernameNotFoundException("Invalid user request!");
     }
 
     @GetMapping("/**")

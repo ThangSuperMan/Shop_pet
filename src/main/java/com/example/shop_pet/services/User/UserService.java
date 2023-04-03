@@ -30,6 +30,19 @@ public class UserService {
         return result;
     }
 
+    public Optional<User> selectUserByUsername(String username) {
+        logger.info("selectUserByUsername UserService is running...");
+        String sql = """
+                SELECT *
+                FROM users
+                where username=?
+                """;
+        Optional<User> user = jdbcTemplate.query(sql, new UserRowMapper(), username)
+                .stream()
+                .findFirst();
+        return user;
+    }
+
     public Boolean isUsernameExist(String username) {
         logger.info("isUserExists UserService is running...");
         String sql = """
