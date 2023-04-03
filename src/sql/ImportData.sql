@@ -18,11 +18,11 @@ create type role_enum as enum ('ADMIN', 'USER');
 create table if not exists users (
     id serial,
     username varchar(45) not null,
-    password varchar(75) not null,
+    password char(60) not null,
     email varchar(45) not null,
     role role_enum default 'USER' not null,
-    created_at timestamp not null default now(),
-    updated_at timestamp not null default now(),
+    created_at timestamptz not null default now(),
+    updated_at timestamptz not null default now(),
     unique(username),
     primary key (id)
 );

@@ -5,7 +5,8 @@
 // import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
 // import org.slf4j.Logger;
 // import org.slf4j.LoggerFactory;
-// import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
+// import
+// org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 // import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 // import org.springframework.security.core.context.SecurityContextHolder;
 // import org.springframework.security.core.userdetails.User;
@@ -51,7 +52,7 @@
 //         final String jwtToken;
 
 //         if (authHeader == null || !authHeader.startsWith("Bearer")) {
-//             logger.warn("authHeader :>> " + authHeader);            
+//             logger.warn("authHeader :>> " + authHeader);
 //             filterChain.doFilter(request, response);
 //             return;
 //         }
@@ -59,13 +60,15 @@
 //         int beginIndex = 7;
 //         jwtToken = authHeader.substring(beginIndex);
 //         userEmail = "something";
-//         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+//         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null)
+//         {
 //             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 //             System.out.println("userDetails :>> " + userDetails);
 //             // UserDetails userDetails = .
 //             // final boolean isTokenValid;
 //             // if (isTokenValid) {
-//             //     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(, null);
+//             //     UsernamePasswordAuthenticationToken authToken = new
+//             UsernamePasswordAuthenticationToken(, null);
 //             // }
 //         }
 //     }

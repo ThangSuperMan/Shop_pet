@@ -1,8 +1,5 @@
 package com.example.shop_pet.models;
 
-import java.util.Optional;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
