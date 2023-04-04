@@ -1,5 +1,6 @@
 package com.example.shop_pet.controllers;
 
+import com.example.shop_pet.config.UserServiceConfig;
 import com.example.shop_pet.dto.AuthRequest;
 import com.example.shop_pet.models.User;
 import com.example.shop_pet.services.User.UserService;
@@ -13,8 +14,11 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +37,12 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired 
+    private UserServiceConfig UserServiceConfig;
+
     private final JwtUtils jwtUtils;
+
+    // Include the user table structure and the user details extends from spring security
     private final UserService userService;
 
     public AuthController(JwtUtils jwtUtils, UserService userService) {
@@ -111,6 +120,30 @@ public class AuthController {
         //     return jwtUtils.generateToken(authRequest.getUsername());
         // }
         // throw new UsernameNotFoundException("Invalid user request!");
+    }
+
+    @PostMapping("/authenticate")
+    public String authenticate(@RequestBody AuthRequest authRequest ) throws Exception {
+        logger.info("/authenticate AuthController is running...");
+        User user = new User();
+        user.setUsername(authRequest.getUsername());
+        user.setPassword(authRequest.getPassword());
+
+        System.out.println("username from body :>> " + authRequest.getUsername());
+
+        try {
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()) 
+            );
+        } catch(BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
+        }
+        UserDetails userDetails = UserServiceConfig.loadUserByUsername(authRequest.getUsername());
+
+        final String token = jwtUtils.generateToken(authRequest.getUsername());
+
+        System.out.println("toauthenticateken :>> " + token);
+        return token;
     }
 
     @GetMapping("/**")

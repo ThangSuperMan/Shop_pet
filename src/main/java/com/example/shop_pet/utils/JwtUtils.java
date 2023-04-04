@@ -15,6 +15,7 @@ import io.jsonwebtoken.security.Keys;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,12 @@ import org.springframework.stereotype.Component;
 public class JwtUtils {
     Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    String SECRET_KEY = "2F413F442A472D4B6150645367566B59703373367639792442264529482B4D62";
+    @Value("${jwt.secret}")
+    String SECRET_KEY;
+
+    public JwtUtils() {
+        logger.info("Secret key :>> " + SECRET_KEY);
+    }
 
     public String extractUsername(String token) {
         logger.info("extractUsername is running...");
