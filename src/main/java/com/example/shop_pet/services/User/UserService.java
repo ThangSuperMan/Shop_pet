@@ -22,29 +22,23 @@ public class UserService {
         logger.info("insertUser service is running...");
         String sql = "insert into users (username, password, email) values (?, ?, ?)";
         Boolean isUsernameExist = isUsernameExist(user.getUsername());
-        if (isUsernameExist) {
+        if (Boolean.TRUE.equals(isUsernameExist)) {
             logger.error("Username exists, please choose another one!");
             return -1;
-        } 
-        int result = jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getEmail());
-        return result;
+        }
+        return jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getEmail());
     }
 
-    public User selectUserByUsername(String username) {
+    public Optional<User> selectUserByUsername(String username) {
         logger.info("selectUserByUsername UserService is running...");
         String sql = """
                 SELECT *
                 FROM users
                 where username=?
                 """;
-        User user = jdbcTemplate.query(sql, new UserRowMapper(), username)
+        return jdbcTemplate.query(sql, new UserRowMapper(), username)
                 .stream()
-                .findFirst()
-                .orElse(null);
-        // Optional<User> user = jdbcTemplate.query(sql, new UserRowMapper(), username)
-        //         .stream()
-        //         .findFirst();
-        return user;
+                .findFirst();
     }
 
     public Boolean isUsernameExist(String username) {
@@ -52,15 +46,12 @@ public class UserService {
         String sql = """
                     select *
                     from users
-                    where username=?                
+                    where username=?
                 """;
         Optional<User> user = jdbcTemplate.query(sql, new UserRowMapper(), username)
-            .stream()
-            .findFirst();
+                .stream()
+                .findFirst();
 
-        if (user.isPresent()) {
-            return true;
-        }
-        return false;
+        return user.isPresent();
     }
 }

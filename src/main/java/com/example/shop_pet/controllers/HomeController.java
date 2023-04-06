@@ -3,6 +3,9 @@ package com.example.shop_pet.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.shop_pet.models.Book;
+import com.example.shop_pet.services.Book.BookService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,9 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.example.shop_pet.models.Book;
-import com.example.shop_pet.services.Book.BookService;
 
 import lombok.RequiredArgsConstructor;
 

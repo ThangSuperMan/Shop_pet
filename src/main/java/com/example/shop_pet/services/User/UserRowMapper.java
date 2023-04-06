@@ -12,11 +12,10 @@ public class UserRowMapper implements RowMapper<User> {
     @Nullable
     public User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return new User(
-            resultSet.getLong("id"),
-            resultSet.getString("username"),
-            resultSet.getString("password"),
-            resultSet.getString("email"),
-            resultSet.getString("role")
-        );
+                resultSet.getLong("id"),
+                resultSet.getString("username"),
+                resultSet.getString("password"),
+                resultSet.getString("email"),
+                resultSet.getString("role"));
     }
 }

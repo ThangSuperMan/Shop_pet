@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,10 +15,13 @@ import com.example.shop_pet.models.Book;
 import lombok.RequiredArgsConstructor;
 
 @Repository
-@RequiredArgsConstructor
 public class BookService {
     Logger logger = LoggerFactory.getLogger(BookService.class);
     private final JdbcTemplate jdbcTemplate;
+
+		public BookService(JdbcTemplate jdbcTemplate) {
+				this.jdbcTemplate = jdbcTemplate;
+		}
 
     public List<Book> selectBooks() {
         logger.info("selectBooks service is running...");

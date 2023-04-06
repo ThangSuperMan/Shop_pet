@@ -41,14 +41,14 @@ public class JwtUtils {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token){
+    private Claims extractAllClaims(String token) {
         logger.info("extractAllClaims is running...");
         return Jwts
-        .parserBuilder()
-        .setSigningKey(getJwtAccessKey())
-        .build()
-        .parseClaimsJws(token)
-        .getBody();
+                .parserBuilder()
+                .setSigningKey(getJwtAccessKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public Date extractExpiration(String token) {
@@ -71,12 +71,12 @@ public class JwtUtils {
 
     public String createToken(Map<String, Object> claims, String username) {
         return Jwts.builder()
-            .setClaims(claims)
-            .setSubject(username)
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(30)))
-            .signWith(getJwtAccessKey(), SignatureAlgorithm.HS256)
-            .compact();
+                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(30)))
+                .signWith(getJwtAccessKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     private Key getJwtAccessKey() {

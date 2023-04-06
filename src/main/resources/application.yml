@@ -1,9 +1,9 @@
 # Security
-spring:
-  security:
-    user:
-      name: admin
-      password: admin
+# spring:
+#   security:
+#     user:
+#       name: admin
+#       password: admin
 
 # Jwt
 jwt:
