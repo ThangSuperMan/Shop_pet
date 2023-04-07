@@ -30,6 +30,8 @@ create table if not exists users (
 insert into users (username, password, email, role) values ('thangphan', '1', 'thang@gmail.com', 'ADMIN');
 insert into users (username, password, email, role) values ('ngocphan', '1', 'ngoc@gmail.com', 'USER');
 
+select * from users;
+
 -- create or replace function on_update_user()
 --     return trigger
 --     language plpgsql

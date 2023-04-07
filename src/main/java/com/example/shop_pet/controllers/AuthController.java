@@ -1,6 +1,5 @@
 package com.example.shop_pet.controllers;
 
-// import com.example.shop_pet.config.UserServiceConfig;
 import com.example.shop_pet.dto.AuthRequest;
 import com.example.shop_pet.models.User;
 import com.example.shop_pet.services.User.UserService;
@@ -11,10 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,12 +29,9 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    public AuthController(PasswordEncoder passwordEncoder, JwtUtils jwtUtils, UserService userService) {
-        // this.jwtUtils = jwtUtils;
-        this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
-    }
-
+		@Autowired
+		private JwtUtils jwtUtils;
+		
     @GetMapping()
     public String renderAdminPage() {
         return "Admin page";
@@ -54,6 +46,7 @@ public class AuthController {
     // ADMIN
     @GetMapping("/admin/login")
     public String adminLoginPage() {
+				logger.info("adminLoginpage hehe");
         return "<strong>login page</strong>";
     }
 

@@ -1,0 +1,16 @@
+# POST Login
+
+POST http://localhost:3001/books/authenticate
+Content-Type: application/json
+
+{
+	"username": "thaonguyen",
+	"password": "thaonguyen"
+}
+
+# {"username": "taonguyen", "password": "thaonguyen"}
+
+GET http://localhost:3001/books/all
+Content-Type: application/json
+
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGFvbmd1eWVuIiwiaWF0IjoxNjgwODUyNjAyLCJleHAiOjE2ODA4NTQ0MDJ9.Q-G3vyukXnkMf7Tt2O9ACL5aNmYAIP6302HUyQc0AwE
