@@ -37,32 +37,33 @@ insert into users (username, password, email, role) values ('thangphan', '1', 't
 insert into users (username, password, email, role) values ('ngocphan', '1', 'ngoc@gmail.com', 'USER');
 
 create table if not exists brands (
-  id uuid default uuid_generate_v4(),
+  id serial,
   name varchar(100),
   unique(name),
   primary key(id)
 );
 
-insert into brands (id, name) values ('91bed489-e391-4e8f-b96e-5ca646741ab8' ,'ABC'); 
-insert into brands (id, name) values ('132d84bb-8c2b-4412-bc83-310067249ba3' ,'AFC'); 
-insert into brands (id, name) values ('0f8f5435-d5f8-4b04-b39e-e692d1faf9e3', 'Peppsi'); 
+insert into brands (id, name) values ('1', 'ABC'); 
+insert into brands (id, name) values ('2', 'AFC'); 
+insert into brands (id, name) values ('3', 'Peppsi'); 
 
 create table if not exists inventory (
-    id uuid default uuid_generate_v4(),
+    id serial,
     quantity smallint not null,
     primary key (id)
 );
 
-insert into inventory (id, quantity) values ('20bed489-e391-4e8f-b98e-2ca646741cb8', 5);
-insert into inventory (id, quantity) values ('67faae64-9807-4202-b0c5-c44cc4a1bd8e', 17);
-insert into inventory (id, quantity) values ('75a001a2-185f-453e-aed3-4831815ce6c8', 17);
+insert into inventory (id, quantity) values ('1', 5);
+insert into inventory (id, quantity) values ('2', 17);
+insert into inventory (id, quantity) values ('3', 17);
 
-create type type_money_enum as enum ('USD', 'VN');
+create type type_money_enum as enum ('USD', 'VND');
 
 create table if not exists products (
-    id uuid default uuid_generate_v4(),
-    brand_id uuid,
-    inventory_id uuid not null,
+    id serial,
+    brand_id serial,
+    inventory_id serial not null,
+    related_images_product_id serial,
     title varchar(150),
     price real not null,
     image_url varchar(100),
@@ -76,10 +77,69 @@ create table if not exists products (
         references brands(id)
         on delete set null,
     constraint fk_product_inventory
-      foreign key(brand_id)
-        references brands(id)
+      foreign key(inventory_id)
+        references inventory(id)
         on delete set null
 );
 
-insert into products (brand_id, inventory_id, title, price, image_url, money_type) 
-values ('91bed489-e391-4e8f-b96e-5ca646741ab8', '20bed489-e391-4e8f-b98e-2ca646741cb8', 'Pet Dog Bed Sofa Mats Pet Products', 53.23, 'https://image.com', 'USD');
+insert into products (id, brand_id, inventory_id, title, price, image_url, money_type) values 
+(1, 1, 2, 'Pet Dog Bed Sofa Mats Pet Products', 53.23, 'https://image.com', 'USD'),
+(2, 3, 2, 'Toy for cat', 13.24, 'https://image.com', 'VND');
+
+create table if not exists product_detail (
+  id serial, 
+  produce_id serial, 
+  description varchar(500),
+  primary key (id),
+  constraint fk_product_detail_product
+    foreign key(product_id)
+      references products(id)
+      on delete set null
+)
+
+insert into product_detail (id, product_id, description) values 
+(1, 1, 'Description of product number 1'),
+(2, 2, 'Description of product number 2');
+
+create table if not exists product_types (
+  id serial, 
+  product_detail_id serial,
+  name varchar(50),
+  primary key (id),
+  unique (name),
+  constraint fk_product_detail_product
+    foreign key(product_detail_id)
+      references product_detail(id)
+      on delete set null
+)
+
+insert into product_types (id, product_detail_id, name) values 
+(1, 1, 'Coffee'),
+(2, 1, 'Gray'),
+(3, 1, 'Green'),
+
+create table if not exists product_sizes (
+  id serial, 
+  product_detail_id serial,
+  name varchar(50),
+  primary key (id),
+  unique (name),
+  constraint fk_product_detail_product
+    foreign key(product_detail_id)
+      references product_detail(id)
+      on delete set null
+)
+
+insert into product_sizes (id, product_detail_id, name) values 
+(1, 1, 'L 60x45cm'),
+(2, 1, 'M 50x40cm'),
+
+create table if not exists related_images_product (
+  id serial,
+  product_id serial,
+  image_url varchar(100),
+  constraint fk_related_images_product
+    foreign key(product_id)
+      references products(id)
+      on delete set null
+);
