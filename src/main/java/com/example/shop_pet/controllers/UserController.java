@@ -80,7 +80,7 @@ public class UserController {
   }
 
   @PostMapping("/signup")
-  public ResponseEntity<String> signup(@RequestBody User user) {
+  public ResponseEntity<String> signup(@RequestBody @Valid User user) {
     logger.info("Signup AuthController is running...");
 
     // Trim all white spaces
@@ -133,17 +133,10 @@ public class UserController {
       logger.info("autheries :>> " + authentication.getAuthorities());
       String username = authRequest.getUsername();
       Optional<User> user2 = userService.selectUserByUsername(username);
-      map.put("token", jwtUtils.generateToken(authRequest.getUsername()));
+      map.put("jwtToken", jwtUtils.generateToken(authRequest.getUsername()));
       map.put("user", user2);
-      // return map;
       return new ResponseEntity<>(map, HttpStatus.OK);
-      // return jwtUtils.generateToken(authRequest.getUsername());
     } else {
-      // logger.info("here");
-      // map.put("errorMessage", "Invalid user!");
-      // return map;
-      // map.put("my error message", "Hello I am error message");
-      // return new ResponseEntity<>(map, HttpStatus.OK);
       throw new UsernameNotFoundException("invalid user request!");
     }
   }
