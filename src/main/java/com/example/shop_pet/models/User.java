@@ -1,5 +1,6 @@
 package com.example.shop_pet.models;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +12,7 @@ public class User {
   // private Long id;
   // private UUID id;
   private String id;
-  private String username;
+  @NotNull(message = "Username shouldn't be null") private String username;
   private String password;
   private String confirmPassword;
   private String email;

@@ -4,7 +4,9 @@ import com.example.shop_pet.dto.AuthRequest;
 import com.example.shop_pet.models.User;
 import com.example.shop_pet.services.User.UserService;
 import com.example.shop_pet.utils.JwtUtils;
+import jakarta.validation.Valid;
 import java.util.HashMap;
+import java.util.Optional;
 // import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +28,8 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequestMapping("/api/v1")
-public class AuthController {
-  Logger logger = LoggerFactory.getLogger(AuthController.class);
+public class UserController {
+  Logger logger = LoggerFactory.getLogger(UserController.class);
 
   @Autowired private AuthenticationManager authenticationManager;
 
@@ -114,20 +116,34 @@ public class AuthController {
 
   @PostMapping("/authenticate")
   // public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-  public HashMap<String, String> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+  public ResponseEntity<?> authenticateAndGetToken(@RequestBody @Valid AuthRequest authRequest) {
     logger.info("/books/authenticate just triggered!");
-    logger.info("authRequest :>>" + authRequest);
+
+    Optional<User> user = userService.selectUserByUsername(authRequest.getUsername());
+    if (user.isEmpty()) {
+      logger.info("User is null!");
+      throw new UsernameNotFoundException("Not found this username please retry!");
+    }
+
     Authentication authentication =
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
             authRequest.getUsername(), authRequest.getPassword()));
-    HashMap<String, String> map = new HashMap<>();
+    HashMap<String, Object> map = new HashMap<>();
     if (authentication.isAuthenticated()) {
       logger.info("autheries :>> " + authentication.getAuthorities());
+      String username = authRequest.getUsername();
+      Optional<User> user2 = userService.selectUserByUsername(username);
       map.put("token", jwtUtils.generateToken(authRequest.getUsername()));
-      map.put("quote", "Welcome back");
-      return map;
+      map.put("user", user2);
+      // return map;
+      return new ResponseEntity<>(map, HttpStatus.OK);
       // return jwtUtils.generateToken(authRequest.getUsername());
     } else {
+      // logger.info("here");
+      // map.put("errorMessage", "Invalid user!");
+      // return map;
+      // map.put("my error message", "Hello I am error message");
+      // return new ResponseEntity<>(map, HttpStatus.OK);
       throw new UsernameNotFoundException("invalid user request!");
     }
   }
