@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 // import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,10 +40,10 @@ public class UserController {
 
   @Autowired private JwtUtils jwtUtils;
 
-  @GetMapping()
-  public String renderAdminPage() {
-    return "Admin page";
-  }
+  // @GetMapping("/admin")
+  // public String renderAdminPage() {
+  //   return "Admin page";
+  // }
 
   @GetMapping("/welcome")
   public String welcome() {
@@ -61,6 +62,19 @@ public class UserController {
   // public Optional<Book> getBook(@PathVariable Long id) {
   //   return bookService.selectBookById(id);
   // }
+
+  @GetMapping("/admin")
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public String renderAdminResoucePage() {
+    logger.info("UserController renderAdminResoucePage is running...");
+    return "This is secret admin resouces data";
+  }
+
+  @GetMapping("/user")
+  @PreAuthorize("hasAuthority('USER')")
+  public String renderUserResoucePage() {
+    return "This is secret user resouces data";
+  }
 
   // USER
   @GetMapping("/login")
