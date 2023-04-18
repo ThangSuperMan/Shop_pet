@@ -47,6 +47,7 @@ create table if not exists users (
     password char(60) not null,
     email varchar(45) not null,
     phone varchar(20) default null,
+    avatar_url varchar(100) not null,
     gg_id varchar(50) default null,
     fb_id varchar(50) default null,
     role role_enum default 'USER' not null,
@@ -56,9 +57,8 @@ create table if not exists users (
 );
 
 -- Need decoded password -> throw error if the password did not encode (security by spring boot)
-insert into users (username, email, password, role) values 
-('thangphan', 'thangphan@gmail.com', '$2a$10$.Rn79DH0LkEiDS.YD0rlreiDnyETDqi5z5mWAXhGq8ECP2XHHZqx.','ADMIN'),
-('ngocphan', 'ngocphan@gmail.com', '1', 'USER');
+insert into users (username, avatar_url, email, password, role) values 
+('thangphan', 'https://images-na.ssl-images-amazon.com/images/S/influencer-profile-image-prod/logo/influencer-275f68b5_1662012947804_original._CR0,3,576,576_._FMjpg_.jpeg', 'thangphan@gmail.com', '$2a$10$pbb3icHu8Iu.rTsZwkwhQuYn8pjEZruUYMcQWqDOoT0uaopoIO0dq','ADMIN'),
 
 create table if not exists reviewss (
   id serial,

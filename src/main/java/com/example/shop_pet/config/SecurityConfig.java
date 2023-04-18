@@ -34,7 +34,6 @@ public class SecurityConfig {
   @Bean
   public UserDetailsService userDetailsService() {
     logger.info("UserDetailsService just triggered!");
-
     // UserDetails admin = User.withUsername("thangphan")
     // .password(encoder.encode("thang"))
     // .roles("ADMIN")
@@ -74,10 +73,14 @@ public class SecurityConfig {
         .cors()
         .and()
         .authorizeHttpRequests()
-        // .requestMatchers("/books/welcome", "/api/v1/authenticate", "/api/v1/signup")
         .requestMatchers(
-            "/api/v1/admin", "/api/v1/products/**", "/api/v1/authenticate", "/api/v1/signup")
+            // "/api/v1/admin", "/api/v1/products/**", "/api/v1/authenticate", "/api/v1/signup")
+            "/api/v1/products/**", "/api/v1/authenticate", "/api/v1/signup")
         .permitAll()
+        .and()
+        .authorizeHttpRequests()
+        .requestMatchers("/api/v1/admin")
+        .authenticated()
         .and()
         .authorizeHttpRequests()
         .requestMatchers("/api-docs/**", "/swagger-ui/**")
@@ -94,29 +97,6 @@ public class SecurityConfig {
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
   }
-
-  // return http.csrf()
-  //     .disable()
-  //     .authorizeHttpRequests()
-  //     // .requestMatchers("/books/welcome", "/books/authenticate", "/api/v1/signup")
-  //     .requestMatchers("/books/welcome", "/api/v1/authenticate", "/api/v1/signup")
-  //     .permitAll()
-  //     .and()
-  //     .authorizeHttpRequests()
-  //     .requestMatchers("/api-docs/**", "/swagger-ui/**")
-  //     .permitAll()
-  //     .and()
-  //     .authorizeHttpRequests()
-  //     .requestMatchers("/books/**")
-  //     .authenticated()
-  //     .and()
-  //     .sessionManagement()
-  //     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-  //     .and()
-  //     .authenticationProvider(authenticationProvider())
-  //     .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-  //     .build();
-  // }
 
   @Bean
   public PasswordEncoder passwordEncoder() {
