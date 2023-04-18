@@ -6,10 +6,20 @@
 -- select to_char(created_at, 'YYYY/MM/dd HH24:MI:SS') from users;
 -- Resources: https://www.postgresql.org/docs/current/functions-formatting.html
 
+-- Get number of table in database
+-- Cmd: select count(*) from information_schema.tables where table_schema = 'public';
+
+/*
+
+Description: 11 total number of tables in the database right away.
+
+*/
+
 -- use shop_pet;
 
 create extension if not exists "uuid-ossp";
 
+/*
 create table if not exists books (
     id serial,
     title varchar(45) not null,
@@ -23,6 +33,7 @@ create table if not exists books (
 insert into books (title, author, price, created_at)
 values ('Love for the imperfect things', 'Thang Jenny', 2.400, now());
 
+*/
 
 -- ENUM
 
@@ -104,6 +115,28 @@ insert into products (id, brand_id, inventory_id, title, price, image_url, money
 (1, 1, 2, 'Blue Buffalo Life Protection Formula Natural Adult Dry Dog Food, Chicken and Brown Rice 5-lb Trial Size Bag', 24.5 , 'https://m.media-amazon.com/images/I/81qYRubwRpL._AC_UL600_FMwebp_QL65_.jpg', 'USD'),
 (2, 2, 1, 'CESAR Wet Dog Food Classic Loaf in Sauce Poultry Variety Pack,. Easy Peel Trays with Real Chicken, Turkey or Duck, 3.5 Ounce', 13.24, 'https://m.media-amazon.com/images/I/81-RkvOq6dL._AC_SX569_.jpg', 'USD');
 
+create table if not exists related_images_product (
+  id serial,
+  product_id serial not null,
+  image_url varchar(100),
+  primary key (id),
+  constraint fk_related_images_product
+    foreign key(product_id)
+      references products(id)
+      on delete set null
+);
+
+insert into related_images_product (id, product_id, image_url) values 
+-- Product 1
+(1, 1, 'https://m.media-amazon.com/images/I/81mE4laLKiL._AC_SX466_.jpg'),
+(2, 1, 'https://m.media-amazon.com/images/I/81wt0o3qtHL._AC_SX466_.jpg'),
+(3, 1, 'https://m.media-amazon.com/images/I/71CLm0BKHmL._AC_SX466_.jpg'),
+
+-- Product 2
+(4, 2, 'https://m.media-amazon.com/images/I/81sBISbHS3L._AC_SX569_.jpg'),
+(5, 2, 'https://m.media-amazon.com/images/I/81idM50IhKL._AC_SX569_.jpg'),
+(6, 2, 'https://m.media-amazon.com/images/I/81avyiuwhYL._AC_SX569_.jpg');
+
 create table if not exists product_detail (
   id serial, 
   product_id serial not null, 
@@ -125,10 +158,44 @@ create table if not exists product_detail (
       on delete set null
 );
 
+-- CATEGORIES
+create table if not exists pet_food_flavors (
+  id serial,
+  name varchar(30) not null,
+  unique(name),
+  primary key(id)
+);
+
+insert into pet_food_flavors (id, name) values 
+(1, 'Apple'),
+(2, 'Beef'),
+(3, 'Bison'),
+(4, 'Blueberry'),
+(5, 'Catnip'),
+(6, 'Cheese'),
+(7, 'Chicken'),
+(8, 'Duc'),
+(9, 'Fish'),
+(10, 'Lamb'),
+(11, 'Liver'),
+(12, 'Milk'),
+(13, 'Pork'),
+(14, 'Pumpkin'),
+(15, 'Rabbit'),
+(16, 'Rice'),
+(17, 'Salmon'),
+(18, 'Seafood'),
+(19, 'Shrimp'),
+(20, 'Sweet Potato'),
+(21, 'Tuna'),
+(22, 'Turkey'),
+(23, 'Vegetable'),
+(24, 'Venison');
+
 create table if not exists product_detail_flavors (
   product_detail_id serial,
-  pet_food_flavors serial,
-  primary key (product_detail_id, pet_food_flavors),
+  pet_food_flavor_id serial,
+  primary key (product_detail_id, pet_food_flavor_id),
   constraint fk_product_detail_flavors_product_detail
     foreign key(product_detail_id)
       references product_detail(id)
@@ -154,17 +221,6 @@ insert into product_detail_flavors (product_detail_id, pet_food_flavor_id) value
 insert into product_detail (id, product_id, brand_id, description) values 
 (1, 1, 1, 'Formulated for the health and well-being of dogs, BLUE Life Protection Formula Dry Dog Food is made with the finest natural ingredients enhanced with vitamins and minerals. It contains the ingredients you’ll love feeding as much as they’ll love eating. BLUE Life Protection Formula dog food is a product of the Blue Buffalo company. Based in the United States, Blue Buffalo makes premium-quality pet foods featuring real meat, fruit and vegetables.'),
 (2, 2, 2, 'We believe there’s a lot to love in the tastes and nutrition that nature provides naturally. That’s why our By Nature dog food recipes are bursting with the natural goodness of SUPERFUSION, an advanced nutritional blend of PREMIUM PROTEINS, powerful SUPER INGREDIENTS and SUPERIOR PROBIOTICS. Our dog food recipes include goji berry, ginger, taurine, turmeric, apple cider vinegar, chicory root extract, kelp, pumpkin, spinach, blueberries, fava beans and coconut oil. This combination of superfoods helps boosts your dog’s immune system and provides antioxidants that are good for the eyes, kidney, and liver. Superfood ingredients also improve body and brain function, provide anti-inflammatory benefits, help prevent heart disease, improve digestion, and enhance skin and coat. We want the best for your dog, so we handcraft our dry dog food in small batches with only the finest natural ingredients. Our recipes are formulated without corn, wheat, or soy to give your dog wholesome goodness without artificial flavors and fillers. At the heart of our success is our time-honored commitment to slow-cooking for optimal nutrient retention and maximum energy. Slow-cooking creates a higher starch conversion which leads to increased stamina and energy. Nationally recognized pet nutrition researchers at Kansas State University confirmed this fact after months of testing. Our story began forty years ago when the Golladay Family began making pet food in a small feed mill in Rogers, Ohio. After outgrowing the Rogers facility, they moved operations to Lisbon, Ohio where we continue to manufacture pet food today. We make all our dry dog and cat food at our family-operated facility, so we control and are committed to the quality of all our products. We are proud to be a family-operated business and never cut corners because we know just how important pets are! All of us at By Nature Pet Food invite you to purchase one of our recipes and let your pet experience the slow-cooking difference. We believe in 100% happiness, so if for any reason you are not happy, please reach out to us @Info@blackwoodpetfood, and we will make it right.');
-
-create table if not exists related_images_product (
-  id serial,
-  product_id serial not null,
-  image_url varchar(100),
-  primary key (id),
-  constraint fk_related_images_product
-    foreign key(product_id)
-      references products(id)
-      on delete set null
-);
 
 create table if not exists product_types (
   id serial, 
@@ -200,51 +256,6 @@ insert into product_sizes (id, product_detail_id, name) values
 (1, 1, 'L 60x45cm'),
 (2, 1, 'M 50x40cm');
 */
-
-insert into related_images_product (id, product_id, image_url) values 
--- Product 1
-(1, 1, 'https://m.media-amazon.com/images/I/81mE4laLKiL._AC_SX466_.jpg'),
-(2, 1, 'https://m.media-amazon.com/images/I/81wt0o3qtHL._AC_SX466_.jpg'),
-(3, 1, 'https://m.media-amazon.com/images/I/71CLm0BKHmL._AC_SX466_.jpg'),
-
--- Product 2
-(4, 2, 'https://m.media-amazon.com/images/I/81sBISbHS3L._AC_SX569_.jpg'),
-(5, 2, 'https://m.media-amazon.com/images/I/81idM50IhKL._AC_SX569_.jpg'),
-(6, 2, 'https://m.media-amazon.com/images/I/81avyiuwhYL._AC_SX569_.jpg');
-
--- CATEGORIES
-create table if not exists pet_food_flavors (
-  id serial,
-  name varchar(30) not null,
-  unique(name),
-  primary key(id)
-);
-
-insert into pet_food_flavors (id, name) values 
-(1, 'Apple'),
-(2, 'Beef'),
-(3, 'Bison'),
-(4, 'Blueberry'),
-(5, 'Catnip'),
-(6, 'Cheese'),
-(7, 'Chicken'),
-(8, 'Duc'),
-(9, 'Fish'),
-(10, 'Lamb'),
-(11, 'Liver'),
-(12, 'Milk'),
-(13, 'Pork'),
-(14, 'Pumpkin'),
-(15, 'Rabbit'),
-(16, 'Rice'),
-(17, 'Salmon'),
-(18, 'Seafood'),
-(19, 'Shrimp'),
-(20, 'Sweet Potato'),
-(21, 'Tuna'),
-(22, 'Turkey'),
-(23, 'Vegetable'),
-(24, 'Venison');
 
 create table if not exists pet_food_items_weight (
   id serial,
