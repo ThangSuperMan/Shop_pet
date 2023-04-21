@@ -52,11 +52,11 @@ public class UserController {
     return "This is secret admin resouces data";
   }
 
-  @GetMapping("/user")
-  @PreAuthorize("hasAuthority('USER')")
-  public String renderUserResoucePage() {
-    return "This is secret user resouces data";
-  }
+  // @GetMapping("/user")
+  // @PreAuthorize("hasAuthority('USER')")
+  // public String renderUserResoucePage() {
+  //   return "This is secret user resouces data";
+  // }
 
   @GetMapping("/users")
   public ResponseEntity<?> getUserByUsername(@RequestParam("username") Optional<String> username) {
