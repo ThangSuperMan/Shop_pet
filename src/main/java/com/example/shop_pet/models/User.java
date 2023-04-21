@@ -10,18 +10,22 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class User {
-  // private Long id;
-  // private UUID id;
   private String id;
-  @NotNull(message = "Username shouldn't be null") private String username;
+
+  @NotNull(message = "Username shouldn't be null") 
+  private String username;
+
   @NotNull(message = "password shouldn't be null")
-  @Size(min = 5,
-      message = "Your password is too short, please make sure it store at least 5 characters!")
-  @Size(max = 30,
-      message = "Your password is too long, please make sure it store maximum at 30 characters!")
+
+  @Size(min = 5, message = "Your password is too short, please make sure it store at least 5 characters!")
+  @Size(max = 30, message = "Your password is too long, please make sure it store maximum at 30 characters!")
   private String password;
-  @NotNull(message = "confirmPassword shouldn't be null") private String confirmPassword;
+
+  @NotNull(message = "confirmPassword shouldn't be null") 
+  private String confirmPassword;
+
   private String email;
+  private String avatarUrl;
   private String role;
 
   public User(String id, String username, String password, String email, String role) {

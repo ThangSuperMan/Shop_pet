@@ -38,7 +38,7 @@ values ('Love for the imperfect things', 'Thang Jenny', 2.400, now());
 -- ENUM
 
 create type role_enum as enum ('ADMIN', 'USER');
-create type weight_enum as enum ('lb', 'kg');
+create type unit_product_enum as enum ('lb', 'bag', 'kg');
 create type type_money_enum as enum ('USD', 'VND');
 
 create table if not exists users (
@@ -47,7 +47,7 @@ create table if not exists users (
     password char(60) not null,
     email varchar(45) not null,
     phone varchar(20) default null,
-    avatar_url varchar(100) not null,
+    avatar_url varchar(200),
     gg_id varchar(50) default null,
     fb_id varchar(50) default null,
     role role_enum default 'USER' not null,
@@ -58,7 +58,7 @@ create table if not exists users (
 
 -- Need decoded password -> throw error if the password did not encode (security by spring boot)
 insert into users (username, avatar_url, email, password, role) values 
-('thangphan', 'https://images-na.ssl-images-amazon.com/images/S/influencer-profile-image-prod/logo/influencer-275f68b5_1662012947804_original._CR0,3,576,576_._FMjpg_.jpeg', 'thangphan@gmail.com', '$2a$10$pbb3icHu8Iu.rTsZwkwhQuYn8pjEZruUYMcQWqDOoT0uaopoIO0dq','ADMIN'),
+('thangphan', 'https://images-na.ssl-images-amazon.com/images/S/influencer-profile-image-prod/logo/influencer-275f68b5_1662012947804_original._CR0,3,576,576_._FMjpg_.jpeg', 'thangphan@gmail.com', '$2a$10$UVAD4O3IGOS0q1Ak1mmgp.6SdpUPQDzpukLkWAJ/akg9HprTVtEVO','ADMIN');
 
 create table if not exists reviewss (
   id serial,
@@ -69,7 +69,7 @@ create table if not exists brands (
   id serial,
   name varchar(100),
   unique(name),
-    money_type type_money_enum default 'USD' not null,
+  money_type type_money_enum default 'USD' not null,
   primary key(id)
 );
 
@@ -112,8 +112,8 @@ create table if not exists products (
 );
 
 insert into products (id, brand_id, inventory_id, title, price, image_url, money_type) values 
-(1, 1, 2, 'Blue Buffalo Life Protection Formula Natural Adult Dry Dog Food, Chicken and Brown Rice 5-lb Trial Size Bag', 24.5 , 'https://m.media-amazon.com/images/I/81qYRubwRpL._AC_UL600_FMwebp_QL65_.jpg', 'USD'),
-(2, 2, 1, 'CESAR Wet Dog Food Classic Loaf in Sauce Poultry Variety Pack,. Easy Peel Trays with Real Chicken, Turkey or Duck, 3.5 Ounce', 13.24, 'https://m.media-amazon.com/images/I/81-RkvOq6dL._AC_SX569_.jpg', 'USD');
+(1, 1, 2, 'Blue Buffalo Life Protection Formula Natural Adult Dry Dog Food, Chicken and Brown Rice 5-lb Trial Size Bag', 24.5 , 'https://m.media-amazon.com/images/I/81P6Z2vH2-L._AC_UL320_.jpg', 'USD'),
+(2, 2, 1, 'CESAR Wet Dog Food Classic Loaf in Sauce Poultry Variety Pack,. Easy Peel Trays with Real Chicken, Turkey or Duck, 3.5 Ounce', 13.24, 'https://m.media-amazon.com/images/I/71LtXuEA1sL._AC_UL320_.jpg', 'USD');
 
 create table if not exists related_images_product (
   id serial,
@@ -257,9 +257,20 @@ insert into product_sizes (id, product_detail_id, name) values
 (2, 1, 'M 50x40cm');
 */
 
+create table if not exists product_sizes (
+  id serial,
+  product_detail_id serial,
+  unit unit_product_enum default 'lb' not null,
+  primary key(id),
+  constraint fk_product_detail_product
+    foreign key(product_detail_id)
+      references product_detail(id)
+      on delete set null
+);
+
 create table if not exists pet_food_items_weight (
   id serial,
   weight real not null,
-  unit weight_enum not null default 'lb',
+  unit unit_product_enum default 'lb' not null,
   primary key(id)
 );

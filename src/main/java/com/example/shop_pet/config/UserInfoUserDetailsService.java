@@ -25,8 +25,6 @@ public class UserInfoUserDetailsService implements UserDetailsService {
         logger.info("loadUserByUsername just triggered!");
         Optional<User> user = userService.selectUserByUsername(username);
 
-        logger.info("User after load :>> " + user);
-
         // Convert User model -> UserDetails
         return user.map(UserInfoUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -38,33 +39,16 @@ public class UserController {
 
   @Autowired private JwtUtils jwtUtils;
 
-  // @GetMapping("/admin")
-  // public String renderAdminPage() {
-  //   return "Admin page";
-  // }
-
   @GetMapping("/welcome")
   public String welcome() {
     logger.info("/books/welcome just triggerd!");
     return "Welcome this endpoints is not secure";
   }
 
-  //   @GetMapping("/all")
-  //   @PreAuthorize("hasAuthority('ADMIN')")
-  // public List<Book> getAllTheBooks() {
-  //   return bookService.selectBooks();
-  // }
-
-  // @GetMapping("/{id}")
-  // @PreAuthorize("hasAuthority('USER')")
-  // public Optional<Book> getBook(@PathVariable Long id) {
-  //   return bookService.selectBookById(id);
-  // }
-
   @GetMapping("/admin")
   @PreAuthorize("hasAuthority('ADMIN')")
-  public String renderAdminResoucePage() {
-    logger.info("UserController renderAdminResoucePage is running...");
+  public String forAdmin() {
+    logger.info("UserController forAdmin is running...");
     return "This is secret admin resouces data";
   }
 
@@ -72,6 +56,24 @@ public class UserController {
   @PreAuthorize("hasAuthority('USER')")
   public String renderUserResoucePage() {
     return "This is secret user resouces data";
+  }
+
+  @GetMapping("/users")
+  public ResponseEntity<?> getUserByUsername(@RequestParam("username") Optional<String> username) {
+    System.out.println("UserController getUserByUsername method is running...");
+    HashMap<String, Object> map = new HashMap<>();
+    if (username.isPresent()) {
+      Optional<User> user = userService.selectUserByUsername(username.get());
+      if (!user.isPresent()) {
+        map.put("isUsernameAvailable", true);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+      }
+      map.put("isUsernameAvailable", false);
+      return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    map.put("isInvalidUrlParams", true);
+    return new ResponseEntity<>(map, HttpStatus.OK);
   }
 
   // USER

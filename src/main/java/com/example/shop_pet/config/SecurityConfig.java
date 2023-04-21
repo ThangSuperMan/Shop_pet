@@ -54,9 +54,7 @@ public class SecurityConfig {
     configuration.setAllowedOrigins(Arrays.asList("*"));
     configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
     configuration.setAllowCredentials(false);
-    // the below three lines will add the relevant CORS response headers
     configuration.addAllowedOrigin("*");
-    // configuration.addAllowedOriginPattern("*");
     configuration.addAllowedHeader("*");
     configuration.addAllowedMethod("*");
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -73,9 +71,7 @@ public class SecurityConfig {
         .cors()
         .and()
         .authorizeHttpRequests()
-        .requestMatchers(
-            // "/api/v1/admin", "/api/v1/products/**", "/api/v1/authenticate", "/api/v1/signup")
-            "/api/v1/products/**", "/api/v1/authenticate", "/api/v1/signup")
+        .requestMatchers("/api/v1/products/**", "/api/v1/users/**", "/api/v1/authenticate", "/api/v1/signup")
         .permitAll()
         .and()
         .authorizeHttpRequests()
