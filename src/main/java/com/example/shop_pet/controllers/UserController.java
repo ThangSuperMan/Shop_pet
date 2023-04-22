@@ -31,19 +31,23 @@ import org.springframework.web.servlet.view.RedirectView;
 public class UserController {
   Logger logger = LoggerFactory.getLogger(UserController.class);
 
-  @Autowired private AuthenticationManager authenticationManager;
+  @Autowired
+  private AuthenticationManager authenticationManager;
 
-  @Autowired private PasswordEncoder passwordEncoder;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
-  @Autowired private UserService userService;
+  @Autowired
+  private UserService userService;
 
-  @Autowired private JwtUtils jwtUtils;
+  @Autowired
+  private JwtUtils jwtUtils;
 
-  @GetMapping("/welcome")
-  public String welcome() {
-    logger.info("/books/welcome just triggerd!");
-    return "Welcome this endpoints is not secure";
-  }
+  // @GetMapping("/welcome")
+  // public String welcome() {
+  // logger.info("/books/welcome just triggerd!");
+  // return "Welcome this endpoints is not secure";
+  // }
 
   @GetMapping("/admin")
   @PreAuthorize("hasAuthority('ADMIN')")
@@ -55,7 +59,7 @@ public class UserController {
   // @GetMapping("/user")
   // @PreAuthorize("hasAuthority('USER')")
   // public String renderUserResoucePage() {
-  //   return "This is secret user resouces data";
+  // return "This is secret user resouces data";
   // }
 
   @GetMapping("/users")
@@ -76,11 +80,11 @@ public class UserController {
     return new ResponseEntity<>(map, HttpStatus.OK);
   }
 
-  // USER
-  @GetMapping("/login")
-  public String userLoginPage() {
-    return "<strong>login page</strong>";
-  }
+  // // USER
+  // @GetMapping("/login")
+  // public String userLoginPage() {
+  // return "<strong>login page</strong>";
+  // }
 
   // ADMIN
   @GetMapping("/admin/login")
@@ -94,22 +98,23 @@ public class UserController {
   }
 
   @PostMapping("/signup")
-  public ResponseEntity<String> signup(@RequestBody @Valid User user) {
-    logger.info("Signup AuthController is running...");
+  public ResponseEntity<?> signup(@RequestBody @Valid User user) {
+    logger.info("AuthController Signup method is running...");
 
     // Trim all white spaces
     user.setUsername(user.getUsername().trim());
     user.setPassword(user.getPassword().trim());
     user.setConfirmPassword(user.getConfirmPassword().trim());
 
+    HashMap<String, Object> map = new HashMap<String, Object>();
     if (userService.isUsernameExist(user.getUsername())) {
       String message = "Username: " + user.getUsername() + " exists, please choose another one!";
-      return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+      return new ResponseEntity<>(map.put("errorMessage", message), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     if (!isSamePassword(user.getPassword(), user.getConfirmPassword())) {
-      String message =
-          "Password and confirm password does not match, make sure you typed it correctly!";
-      return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+      String message = "Password and confirm password does not match, make sure you typed it correctly!";
+      map.put("errorMessage", message);
+      return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     String passwordEncoded = passwordEncoder.encode(user.getPassword());
@@ -121,17 +126,20 @@ public class UserController {
     if (result > 0) {
       logger.info("Insert account successfully");
       String message = "Signup successfully, now you can login, enjoy :)";
-      return new ResponseEntity<>(message, HttpStatus.OK);
+      map.put("message", message);
+      map.put("signUpSuccessfully", true);
+      return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     String message = "Username: " + user.getUsername() + " exists, please choose another one!";
-    return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    map.put("errorMessage", message);
+    return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  @PostMapping("/authenticate")
+  @PostMapping("/signin")
   // public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
   public ResponseEntity<?> authenticateAndGetToken(@RequestBody @Valid AuthRequest authRequest) {
-    logger.info("/books/authenticate just triggered!");
+    logger.info("/books/signin just triggered!");
 
     Optional<User> user = userService.selectUserByUsername(authRequest.getUsername());
     if (user.isEmpty()) {
@@ -139,9 +147,8 @@ public class UserController {
       throw new UsernameNotFoundException("Not found this username please retry!");
     }
 
-    Authentication authentication =
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-            authRequest.getUsername(), authRequest.getPassword()));
+    Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+        authRequest.getUsername(), authRequest.getPassword()));
     HashMap<String, Object> map = new HashMap<>();
     if (authentication.isAuthenticated()) {
       logger.info("autheries :>> " + authentication.getAuthorities());

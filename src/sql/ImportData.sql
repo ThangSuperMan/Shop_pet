@@ -45,7 +45,7 @@ create table if not exists users (
     id uuid default uuid_generate_v4(),
     username varchar(45) not null,
     password char(60) not null,
-    email varchar(45) not null,
+    email varchar(45),
     phone varchar(20) default null,
     avatar_url varchar(200),
     gg_id varchar(50) default null,

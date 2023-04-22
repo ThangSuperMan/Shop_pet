@@ -29,7 +29,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
   Logger logger = LoggerFactory.getLogger(getClass());
 
-  @Autowired JwtAuthFilter jwtAuthFilter;
+  @Autowired
+  JwtAuthFilter jwtAuthFilter;
 
   @Bean
   public UserDetailsService userDetailsService() {
@@ -71,7 +72,7 @@ public class SecurityConfig {
         .cors()
         .and()
         .authorizeHttpRequests()
-        .requestMatchers("/api/v1/products/**", "/api/v1/users/**", "/api/v1/authenticate", "/api/v1/signup")
+        .requestMatchers("/api/v1/products/**", "/api/v1/users/**", "/api/v1/signin", "/api/v1/signup")
         .permitAll()
         .and()
         .authorizeHttpRequests()

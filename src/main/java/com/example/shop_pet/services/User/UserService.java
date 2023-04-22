@@ -1,7 +1,6 @@
 package com.example.shop_pet.services.User;
 
 import com.example.shop_pet.models.User;
-import com.example.shop_pet.services.Book.BookService;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +10,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-  Logger logger = LoggerFactory.getLogger(BookService.class);
+  Logger logger = LoggerFactory.getLogger(UserService.class);
 
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public int insertUser(User user) {
     logger.info("insertUser service is running...");
@@ -35,8 +35,7 @@ public class UserService {
   public Boolean isUsernameExist(String username) {
     logger.info("isUserExists UserService is running...");
     String sql = "select * from users where username = ?";
-    Optional<User> user =
-        jdbcTemplate.query(sql, new UserRowMapper(), username).stream().findFirst();
+    Optional<User> user = jdbcTemplate.query(sql, new UserRowMapper(), username).stream().findFirst();
 
     return user.isPresent();
   }
