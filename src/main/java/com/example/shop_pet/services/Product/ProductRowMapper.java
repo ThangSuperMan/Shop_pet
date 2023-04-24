@@ -10,8 +10,13 @@ public class ProductRowMapper implements RowMapper<Product> {
   @Override
   @Nullable
   public Product mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-    return new Product(resultSet.getString("id"), resultSet.getDouble("price"),
+    return new Product(resultSet.getString("id"), resultSet.getString("title"), resultSet.getDouble("price"),
         resultSet.getString("image_url"), resultSet.getString("money_type"),
-        resultSet.getString("created_at_formated"), resultSet.getString("updated_at"));
+        resultSet.getString("created_at"), resultSet.getString("updated_at"));
+    // return new Product(resultSet.getString("id"), resultSet.getString("title"),
+    // resultSet.getDouble("price"),
+    // resultSet.getString("image_url"), resultSet.getString("money_type"),
+    // resultSet.getString("created_at_formated"),
+    // resultSet.getString("updated_at"));
   }
 }

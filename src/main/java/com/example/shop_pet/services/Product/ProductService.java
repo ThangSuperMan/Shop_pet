@@ -13,22 +13,23 @@ import org.springframework.stereotype.Repository;
 public class ProductService {
   Logger logger = LoggerFactory.getLogger(getClass());
 
-  @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   public List<Product> selectProducts() {
     logger.info("BookService, selectProducts is running...");
-    String sql =
-        "SELECT *, to_char(created_at, 'YYYY/MM/dd HH24:MI:SS') as created_at_formated FROM products ";
+    // String sql = "SELECT *, to_char(created_at, 'YYYY/MM/dd HH24:MI:SS') as
+    // created_at_formated FROM products ";
+    String sql = "SELECT * FROM products";
     List<Product> products = jdbcTemplate.query(sql, new ProductRowMapper());
     return products;
   }
 
   public Optional<Product> selectProductById(Long id) {
     logger.info("BookService, selectProductById is running...");
-    String sql =
-        "SELECT *, to_char(created_at, 'YYYY/MM/dd HH24:MI:SS') as created_at_formated FROM products WHERE id=?";
-    Optional<Product> product =
-        jdbcTemplate.query(sql, new ProductRowMapper(), id).stream().findFirst();
+    String sql = "SELECT *, to_char(created_at, 'YYYY/MM/dd HH24:MI:SS') as created_at_formated FROM products WHERE id=?";
+    // String sql = "SELECT * FROM products";
+    Optional<Product> product = jdbcTemplate.query(sql, new ProductRowMapper(), id).stream().findFirst();
     return product;
   }
 }

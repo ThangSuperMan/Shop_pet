@@ -111,9 +111,16 @@ create table if not exists products (
         on delete set null
 );
 
+create or replace function update_date_updated_product() 
+returns trigger as && 
+begin
+  if new.
+
 insert into products (id, brand_id, inventory_id, title, price, image_url, money_type) values 
 (1, 1, 2, 'Blue Buffalo Life Protection Formula Natural Adult Dry Dog Food, Chicken and Brown Rice 5-lb Trial Size Bag', 24.5 , 'https://m.media-amazon.com/images/I/81P6Z2vH2-L._AC_UL320_.jpg', 'USD'),
-(2, 2, 1, 'CESAR Wet Dog Food Classic Loaf in Sauce Poultry Variety Pack,. Easy Peel Trays with Real Chicken, Turkey or Duck, 3.5 Ounce', 13.24, 'https://m.media-amazon.com/images/I/71LtXuEA1sL._AC_UL320_.jpg', 'USD');
+(2, 2, 1, 'CESAR Wet Dog Food Classic Loaf in Sauce Poultry Variety Pack,. Easy Peel Trays with Real Chicken, Turkey or Duck, 3.5 Ounce', 13.24, 'https://m.media-amazon.com/images/I/71LtXuEA1sL._AC_UL320_.jpg', 'USD'),
+(3, 1, 2, 'PetLab Co. Probiotics for Dogs, Support Gut Health & Seasonal Allergies - Pork Flavor Soft Chew - 30 Soft Chews - Packaging May Vary', 31.286, 'https://m.media-amazon.com/images/I/91WYcbT7uQL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
+(4, 2, 1, 'TEMPTATIONS Classic Crunchy and Soft Cat Treats Tasty Chicken Flavor, 30 oz. Tub (Packaging May Vary)', 13.24, 'https://m.media-amazon.com/images/I/81xLTrwlNbL._AC_UL640_FMwebp_QL65_.jpg', 'USD');
 
 create table if not exists related_images_product (
   id serial,
