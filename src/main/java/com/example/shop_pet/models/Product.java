@@ -1,7 +1,5 @@
 package com.example.shop_pet.models;
 
-import org.springframework.ui.ModelExtensionsKt;
-
 import lombok.Getter;
 import lombok.Setter;
 

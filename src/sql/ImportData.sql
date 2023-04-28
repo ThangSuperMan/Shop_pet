@@ -46,7 +46,6 @@ create table if not exists brands (
   id serial,
   name varchar(100),
   unique(name),
-  money_type type_money_enum default 'USD' not null,
   primary key(id)
 );
 
@@ -91,7 +90,7 @@ insert into products (id, brand_id, inventory_id, title, price, image_url, money
 (1, 1, 2, 'Blue Buffalo Life Protection Formula Natural Adult Dry Dog Food, Chicken and Brown Rice 5-lb Trial Size Bag', 24.5 , 'https://m.media-amazon.com/images/I/81P6Z2vH2-L._AC_UL320_.jpg', 'USD'),
 (2, 2, 1, 'CESAR Wet Dog Food Classic Loaf in Sauce Poultry Variety Pack,. Easy Peel Trays with Real Chicken, Turkey or Duck, 3.5 Ounce', 13.24, 'https://m.media-amazon.com/images/I/71LtXuEA1sL._AC_UL320_.jpg', 'USD'),
 (3, 1, 2, 'PetLab Co. Probiotics for Dogs, Support Gut Health & Seasonal Allergies - Pork Flavor Soft Chew - 30 Soft Chews - Packaging May Vary', 31.286, 'https://m.media-amazon.com/images/I/91WYcbT7uQL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
-(4, 2, 1, 'TEMPTATIONS Classic Crunchy and Soft Cat Treats Tasty Chicken Flavor, 30 oz. Tub (Packaging May Vary)', 13.24, 'https://m.media-amazon.com/images/I/81xLTrwlNbL._AC_UL640_FMwebp_QL65_.jpg', 'USD');
+(4, 2, 1, 'TEMPTATIONS Classic Crunchy and Soft Cat Treats Tasty Chicken Flavor, 30 oz. Tub (Packaging May Vary)', 19.3, 'https://m.media-amazon.com/images/I/81xLTrwlNbL._AC_UL640_FMwebp_QL65_.jpg', 'USD');
 
 create table if not exists product_images (
   id serial,
@@ -104,8 +103,8 @@ create table if not exists product_images (
 
 insert into product_images (id, product_id, url) values 
 -- Product 1
-(1, 1, 'https://m.media-amazon.com/images/I/81mE4laLKiL._AC_SX466_.jpg'),
-(2, 1, 'https://m.media-amazon.com/images/I/81wt0o3qtHL._AC_SX466_.jpg'),
+(1, 1, 'https://m.media-amazon.com/images/I/51e+bL+tjuS._AC_US40_.jpg'),
+(2, 1, 'https://m.media-amazon.com/images/I/51y1aJEZixS._AC_US40_.jpg'),
 (3, 1, 'https://m.media-amazon.com/images/I/71CLm0BKHmL._AC_SX466_.jpg'),
 
 -- Product 2
@@ -125,12 +124,15 @@ create table if not exists product_sizes (
 create table if not exists product_detail (
   id serial, 
   product_id integer not null, 
-  brand_id integer  not null, 
   description varchar(2500),
   primary key (id),
-  constraint fk_product_detail_product foreign key(product_id) references products(id) on delete set null,
-  constraint fk_product_detail_brand foreign key(brand_id) references brands(id) on delete set null
+  constraint fk_product_detail_product foreign key(product_id) references products(id) on delete set null
 );
+
+insert into product_detail (id, product_id, description) values 
+(1, 1, 'Twenty-Four (24) 3 oz. Cans - Purina Fancy Feast Gravy Wet Cat Food Variety Pack, Gravy Lovers Poultry & Beef Feast Collection'),
+(2, 2, 'Chicken. turkey and beef flavors cats love. 100 percent complete and balanced nutrition'),
+(3, 3, 'Tender, delicate bites for a tempting texture. Essential vitamins and minerals to support her overall health');
 
 create table if not exists reviews (
   id serial,
@@ -189,8 +191,8 @@ create table if not exists product_flavors (
   product_id integer,
   pet_food_flavor_id integer,
   primary key (product_id, pet_food_flavor_id),
-  constraint fk_product_fal foreign key(product_id) references products(id) on delete set null,
-  constraint fk_product_detail_flavors_pet_food_flavor foreign key(pet_food_flavor_id) references pet_food_flavors(id) on delete set null
+  constraint fk_product_flavor foreign key(product_id) references products(id) on delete set null,
+  constraint fk_product_flavors_pet_food_flavor foreign key(pet_food_flavor_id) references pet_food_flavors(id) on delete set null
 );
 
 insert into product_flavors (product_id, pet_food_flavor_id) values 
@@ -204,7 +206,3 @@ insert into product_flavors (product_id, pet_food_flavor_id) values
 -- Second food product
 (1, 12),
 (1, 7);
-
-insert into product_detail (id, product_id, brand_id, description) values 
-(1, 1, 1, 'Formulated for the health and well-being of dogs, BLUE Life Protection Formula Dry Dog Food is made with the finest natural ingredients enhanced with vitamins and minerals. It contains the ingredients you’ll love feeding as much as they’ll love eating. BLUE Life Protection Formula dog food is a product of the Blue Buffalo company. Based in the United States, Blue Buffalo makes premium-quality pet foods featuring real meat, fruit and vegetables.'),
-(2, 2, 2, 'We believe there’s a lot to love in the tastes and nutrition that nature provides naturally. That’s why our By Nature dog food recipes are bursting with the natural goodness of SUPERFUSION, an advanced nutritional blend of PREMIUM PROTEINS, powerful SUPER INGREDIENTS and SUPERIOR PROBIOTICS. Our dog food recipes include goji berry, ginger, taurine, turmeric, apple cider vinegar, chicory root extract, kelp, pumpkin, spinach, blueberries, fava beans and coconut oil. This combination of superfoods helps boosts your dog’s immune system and provides antioxidants that are good for the eyes, kidney, and liver. Superfood ingredients also improve body and brain function, provide anti-inflammatory benefits, help prevent heart disease, improve digestion, and enhance skin and coat. We want the best for your dog, so we handcraft our dry dog food in small batches with only the finest natural ingredients. Our recipes are formulated without corn, wheat, or soy to give your dog wholesome goodness without artificial flavors and fillers. At the heart of our success is our time-honored commitment to slow-cooking for optimal nutrient retention and maximum energy. Slow-cooking creates a higher starch conversion which leads to increased stamina and energy. Nationally recognized pet nutrition researchers at Kansas State University confirmed this fact after months of testing. Our story began forty years ago when the Golladay Family began making pet food in a small feed mill in Rogers, Ohio. After outgrowing the Rogers facility, they moved operations to Lisbon, Ohio where we continue to manufacture pet food today. We make all our dry dog and cat food at our family-operated facility, so we control and are committed to the quality of all our products. We are proud to be a family-operated business and never cut corners because we know just how important pets are! All of us at By Nature Pet Food invite you to purchase one of our recipes and let your pet experience the slow-cooking difference. We believe in 100% happiness, so if for any reason you are not happy, please reach out to us @Info@blackwoodpetfood, and we will make it right.');
