@@ -17,7 +17,7 @@ public class ProductService {
   private JdbcTemplate jdbcTemplate;
 
   public List<Product> selectProducts() {
-    logger.info("BookService, selectProducts is running...");
+    logger.info("ProductService selectProducts is running...");
     // String sql = "SELECT *, to_char(created_at, 'YYYY/MM/dd HH24:MI:SS') as
     // created_at_formated FROM products ";
     String sql = "SELECT * FROM products";
