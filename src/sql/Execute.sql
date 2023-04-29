@@ -1,5 +1,5 @@
-\d product_flavors;
-\d pet_food_flavors;
+/* \d product_flavors; */
+/* \d pet_food_flavors; */
 
 /* Get flavors for pet's food product */
 /* Input: product id */
@@ -16,4 +16,10 @@ left join product_flavors b
 on a.id = b.product_id
 left join pet_food_flavors
 on pet_food_flavors.id = b.pet_food_flavor_id
-where a.id = 1
+where a.id = 1;
+
+\d product_flavors;
+
+select count(*) total_flavor 
+from product_flavors
+where product_id = 1;

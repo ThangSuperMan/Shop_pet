@@ -18,7 +18,6 @@ import com.example.shop_pet.models.Brand;
 import com.example.shop_pet.models.FoodFlavor;
 import com.example.shop_pet.models.Product;
 import com.example.shop_pet.models.ProductDetail;
-import com.example.shop_pet.models.ProductFlavor;
 import com.example.shop_pet.models.ProductImage;
 import com.example.shop_pet.services.Brand.BrandService;
 import com.example.shop_pet.services.FoodFlavor.FoodFlavorService;
@@ -48,37 +47,35 @@ public class ProductController {
     return products;
   }
 
+  public boolean isFoodProduct(Long productId) {
+    int count = foodFlavorService.countNumberOfFlavors(productId);
+    return count > 0 ? true : false;
+  }
+
   @GetMapping("/products/{id}")
   public ResponseEntity<?> getProduct(@PathVariable Long id) {
-    // public Optional<Product> getProduct(@PathVariable Long id) {
     logger.info("ProductController getProduct method is running...");
     Optional<Product> product = productService.selectProductById(id);
     Optional<ProductDetail> productDetail = productDetailService.selectProductDetailById(id);
     List<ProductImage> productImages = productImageService.selectProductImages(id);
     HashMap<String, Object> map = new HashMap<String, Object>();
+
     if (product.isPresent()) {
       Product prod = product.get();
-      System.out.println("hehe :>> " + prod.getBrandId());
       Long brandId = Long.parseLong(prod.getBrandId());
       Optional<Brand> brand = brandService.selectBrandById(brandId);
       List<FoodFlavor> flavorNames = foodFlavorService.selectFlavorsById(Long.parseLong(prod.getId()));
-      // List<ProductFlavor> foodFlavors = foodFlavorService.selectFlavorIdsByProductId(id);
 
-      // for (int i = 0; i < foodFlavors.size();i ++) {
-      //   System.out.println("-------------------------------");
-      //   System.out.println("product id :>> " + foodFlavors.get(i).getProductId());
-      //   System.out.println("pet food flavor id :>> " + foodFlavors.get(i).getPetFoodFlavorId());
-      //   Long flavorId = Long.parseLong(foodFlavors.get(i).getPetFoodFlavorId());
-      //   List<FoodFlavor> flavors = foodFlavorService.selectFlavorsById(flavorId); 
-      //   map.put("flavorNames", flavors);
-      // }
-      map.put("foodFlavors", flavorNames);
+      if (isFoodProduct(Long.parseLong(prod.getId()))) {
+        logger.info("isFoodProduct" + isFoodProduct(Long.parseLong(prod.getId())));
+        map.put("foodFlavors", flavorNames);
+      }
+
       map.put("brand", brand);
     }
     map.put("product", product);
     map.put("productDetail", productDetail);
     map.put("productImages", productImages);
     return new ResponseEntity<>(map, HttpStatus.OK);
-    // return product;
   }
 }

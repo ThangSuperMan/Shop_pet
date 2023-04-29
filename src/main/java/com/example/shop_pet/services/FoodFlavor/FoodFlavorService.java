@@ -18,9 +18,24 @@ public class FoodFlavorService {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
+  public int countNumberOfFlavors(Long productId) {
+    logger.info("FoodFlavorService selectNumberOfFlavors is running...");
+    String sql = """
+                  SELECT *
+                  FROM product_flavors 
+                  WHERE product_id = ?
+                  """;
+    List<ProductFlavor> productFlavors = jdbcTemplate.query(sql, new ProductFlavorRowMapper(), productId);
+    return productFlavors.size();
+  }
+
   public List<ProductFlavor> selectFlavorIdsByProductId(Long productId) {
     logger.info("FoodFlavorService selectFlavorsByProductId is running...");
-    String sql = "SELECT * FROM product_flavors where product_id = ?";
+    String sql = """
+                  SELECT *
+                  FROM product_flavors 
+                  WHERE product_id = ?
+                  """;
     List<ProductFlavor> productFlavors = jdbcTemplate.query(sql, new ProductFlavorRowMapper(), productId);
     return productFlavors;
   }
@@ -29,14 +44,14 @@ public class FoodFlavorService {
     logger.info("FoodFlavorService selectFlavorsById is running...");
     // String sql = "SELECT * FROM pet_food_flavors where id = ?";
     String sql = """
-                  select pet_food_flavors.id, pet_food_flavors.name 
-                  from products a 
-                  left join product_flavors b 
-                  on a.id = b.product_id
-                  left join pet_food_flavors
-                  on pet_food_flavors.id = b.pet_food_flavor_id
-                  where a.id = ?
-                """;
+                  SELECT pet_food_flavors.id, pet_food_flavors.name 
+                  FROM products a 
+                  LEFT JOIN product_flavors b 
+                  ON a.id = b.product_id
+                  LEFT JOIN pet_food_flavors
+                  ON pet_food_flavors.id = b.pet_food_flavor_id
+                  WHERE a.id = ?
+                  """;
     List<FoodFlavor> flavors = jdbcTemplate.query(sql, new PetFoodFlavorRowMapper(), productId);
     return flavors;
   }
