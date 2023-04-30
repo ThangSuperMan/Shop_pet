@@ -27,8 +27,22 @@ public class ProductService {
 
   public Optional<Product> selectProductById(Long id) {
     logger.info("BookService, selectProductById is running...");
-    String sql = "SELECT *, to_char(created_at, 'YYYY/MM/dd HH24:MI:SS') as created_at_formated FROM products WHERE id=?";
-    // String sql = "SELECT * FROM products";
+    String sql = """
+              SELECT *, to_char(created_at, 'YYYY/MM/dd HH24:MI:SS') as created_at_formated
+              FROM products 
+              WHERE id = ?
+              """;
+    Optional<Product> product = jdbcTemplate.query(sql, new ProductRowMapper(), id).stream().findFirst();
+    return product;
+  }
+
+  public Optional<Product> selectProductDescription(Long id) {
+    logger.info("BookService, selectProductById is running...");
+    String sql = """ 
+              select * 
+              from product_detaiil 
+              where product_id = ? 
+              """;
     Optional<Product> product = jdbcTemplate.query(sql, new ProductRowMapper(), id).stream().findFirst();
     return product;
   }

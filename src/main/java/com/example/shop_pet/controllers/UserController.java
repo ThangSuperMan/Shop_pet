@@ -43,12 +43,6 @@ public class UserController {
   @Autowired
   private JwtUtils jwtUtils;
 
-  // @GetMapping("/welcome")
-  // public String welcome() {
-  // logger.info("/books/welcome just triggerd!");
-  // return "Welcome this endpoints is not secure";
-  // }
-
   @GetMapping("/admin")
   @PreAuthorize("hasAuthority('ADMIN')")
   public String forAdmin() {

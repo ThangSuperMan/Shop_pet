@@ -65,10 +65,26 @@ insert into inventory (id, quantity) values ('1', 5),
 ('2', 17),
 ('3', 17);
 
+create table if not exists category_pet_supplies (
+  id serial,
+  name varchar(30),
+  unique(name),
+  primary key (id)
+);
+
+insert into category_pet_supplies (id, name) values 
+(1, 'Dogs'),
+(2, 'Cats'),
+(3, 'Fish & Aquatic Pets'),
+(4, 'Birds'),
+(5, 'Horses'),
+(6, 'Small Animals');
+
 create table if not exists products (
   id serial,
   brand_id serial not null,
   inventory_id serial not null,
+  category_pet_supplie_id serial not null,
   title varchar(150),
   price numeric(10, 2) not null,
   image_url varchar(100) not null,
@@ -77,7 +93,8 @@ create table if not exists products (
   updated_at timestamptz not null default now(),
   unique(title),
   primary key(id), constraint fk_product_brand foreign key(brand_id) references brands(id) on delete set null,
-  constraint fk_product_inventory foreign key(inventory_id) references inventory(id) on delete set null
+  constraint fk_product_inventory foreign key(inventory_id) references inventory(id) on delete set null,
+  constraint fk_product_category_pet_supplie foreign key(category_pet_supplie_id) references category_pet_supplies(id) on delete set null
 );
 
 create table if not exists prices (
@@ -86,11 +103,11 @@ create table if not exists prices (
   price NUMERIC(10, 2)
 );
 
-insert into products (id, brand_id, inventory_id, title, price, image_url, money_type) values 
-(1, 1, 2, 'Blue Buffalo Life Protection Formula Natural Adult Dry Dog Food, Chicken and Brown Rice 5-lb Trial Size Bag', 24.5 , 'https://m.media-amazon.com/images/I/817jbhS0QpL._AC_SX679_.jpg', 'USD'),
-(2, 2, 1, 'CESAR Wet Dog Food Classic Loaf in Sauce Poultry Variety Pack,. Easy Peel Trays with Real Chicken, Turkey or Duck, 3.5 Ounce', 13.24, 'https://m.media-amazon.com/images/I/71LtXuEA1sL._AC_UL320_.jpg', 'USD'),
-(3, 1, 2, 'PetLab Co. Probiotics for Dogs, Support Gut Health & Seasonal Allergies - Pork Flavor Soft Chew - 30 Soft Chews - Packaging May Vary', 31.286, 'https://m.media-amazon.com/images/I/91WYcbT7uQL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
-(4, 2, 1, 'TEMPTATIONS Classic Crunchy and Soft Cat Treats Tasty Chicken Flavor, 30 oz. Tub (Packaging May Vary)', 19.3, 'https://m.media-amazon.com/images/I/81xLTrwlNbL._AC_UL640_FMwebp_QL65_.jpg', 'USD');
+insert into products (id, brand_id, inventory_id, category_pet_supplie_id, title, price, image_url, money_type) values 
+(1, 1, 2, 1, 'Blue Buffalo Life Protection Formula Natural Adult Dry Dog Food, Chicken and Brown Rice 5-lb Trial Size Bag', 24.5 , 'https://m.media-amazon.com/images/I/817jbhS0QpL._AC_SX679_.jpg', 'USD'),
+(2, 2, 1, 1, 'CESAR Wet Dog Food Classic Loaf in Sauce Poultry Variety Pack,. Easy Peel Trays with Real Chicken, Turkey or Duck, 3.5 Ounce', 13.24, 'https://m.media-amazon.com/images/I/71LtXuEA1sL._AC_UL320_.jpg', 'USD'),
+(3, 1, 2, 2, 'GREENIES Original TEENIE Natural Dog Dental Care Chews Oral Health Dog Treats', 31.286, 'https://m.media-amazon.com/images/I/91WYcbT7uQL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
+(4, 2, 1, 2, 'TEMPTATIONS Classic Crunchy and Soft Cat Treats Tasty Chicken Flavor, 30 oz. Tub (Packaging May Vary)', 19.3, 'https://m.media-amazon.com/images/I/81xLTrwlNbL._AC_UL640_FMwebp_QL65_.jpg', 'USD');
 
 create table if not exists product_images (
   id serial,
@@ -129,10 +146,15 @@ create table if not exists product_detail (
   constraint fk_product_detail_product foreign key(product_id) references products(id) on delete set null
 );
 
+/* Notes */
+/*
+  - Auto insert a ' character if the description store a ' character
+  - Add E for escape the \n (break line)
+*/
 insert into product_detail (id, product_id, description) values 
-(1, 1, 'Twenty-Four (24) 3 oz. Cans - Purina Fancy Feast Gravy Wet Cat Food Variety Pack, Gravy Lovers Poultry & Beef Feast Collection'),
-(2, 2, 'Chicken. turkey and beef flavors cats love. 100 percent complete and balanced nutrition'),
-(3, 3, 'Tender, delicate bites for a tempting texture. Essential vitamins and minerals to support her overall health');
+(1, 1, 'Thirty (30) 3 oz. Cans - Purina Fancy Feast Grain Free Pate Wet Cat Food Variety Pack, Poultry & Beef Collection $$$Made with turkey. chicken or beef. Three different recipes for the variety your cat loves $$$Provides 100 percent complete and balanced nutrition for adult cats. Pleasing pate texture $$$Essential vitamins and minerals in every serving. Backed by Purina, a trusted leader in pet food $$$Delicious tastes she''s sure to adore. Multi-can variety pack makes it easy to stock your pantry'),
+(2, 2, 'Tender, delicate bites for a tempting texture. Essential vitamins and minerals to support her overall health'),
+(3, 3, 'Small Dog Dental Treats: One GREENIES dental treat a day is all it takes for clean teeth, fresh breath and a happy dog; These irresistibly tasty treats feature a delightfully chewy texture that helps fight plaque and tartar $$$ Supports Oral Health: The chewy texture helps clean teeth, maintain healthy gums and freshen breath to make mouths happy day after day $$$ Find the Right Treat: We make GREENIES Dental Treats for every age from puppy to mature, and every dog size from small to large, plus we offer Grain Free, Weight Management, Blueberry Flavor and Fresh Flavor varieties $$$Made With Natural Ingredients Plus Vitamins, Minerals and Nutrients: GREENIES dental treats are easy to digest with highly soluble ingredients and provide balanced nutrition for adult dogs for healthy and delicious treating $$$Veterinarian Recommended for Dental Care: These dental treats are made from high quality ingredients combined into soft chews your dog will love');
 
 create table if not exists reviews (
   id serial,

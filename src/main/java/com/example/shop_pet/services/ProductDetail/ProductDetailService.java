@@ -19,7 +19,11 @@ public class ProductDetailService {
 
   public Optional<ProductDetail> selectProductDetailById(Long id) {
     logger.info("BookService, selectProductDetailById is running...");
-    String sql = "select * from product_detail where product_id = ?";
+    String sql = """
+              SELECT id, product_id, replace(description, '$$$', '<br>') as description
+              FROM product_detail
+              WHERE product_id = ?
+              """;
     Optional<ProductDetail> productDetail = jdbcTemplate.query(sql, new ProductDetailRowMapper(), id).stream().findFirst();
     return productDetail;
   }
