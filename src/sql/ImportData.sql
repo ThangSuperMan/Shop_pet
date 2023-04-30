@@ -92,7 +92,8 @@ create table if not exists products (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   unique(title),
-  primary key(id), constraint fk_product_brand foreign key(brand_id) references brands(id) on delete set null,
+  primary key(id),
+  constraint fk_product_brand foreign key(brand_id) references brands(id) on delete set null,
   constraint fk_product_inventory foreign key(inventory_id) references inventory(id) on delete set null,
   constraint fk_product_category_pet_supplie foreign key(category_pet_supplie_id) references category_pet_supplies(id) on delete set null
 );
@@ -107,7 +108,17 @@ insert into products (id, brand_id, inventory_id, category_pet_supplie_id, title
 (1, 1, 2, 1, 'Blue Buffalo Life Protection Formula Natural Adult Dry Dog Food, Chicken and Brown Rice 5-lb Trial Size Bag', 24.5 , 'https://m.media-amazon.com/images/I/817jbhS0QpL._AC_SX679_.jpg', 'USD'),
 (2, 2, 1, 1, 'CESAR Wet Dog Food Classic Loaf in Sauce Poultry Variety Pack,. Easy Peel Trays with Real Chicken, Turkey or Duck, 3.5 Ounce', 13.24, 'https://m.media-amazon.com/images/I/71LtXuEA1sL._AC_UL320_.jpg', 'USD'),
 (3, 1, 2, 2, 'GREENIES Original TEENIE Natural Dog Dental Care Chews Oral Health Dog Treats', 31.286, 'https://m.media-amazon.com/images/I/91WYcbT7uQL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
-(4, 2, 1, 2, 'TEMPTATIONS Classic Crunchy and Soft Cat Treats Tasty Chicken Flavor, 30 oz. Tub (Packaging May Vary)', 19.3, 'https://m.media-amazon.com/images/I/81xLTrwlNbL._AC_UL640_FMwebp_QL65_.jpg', 'USD');
+(4, 2, 1, 2, 'TEMPTATIONS Classic Crunchy and Soft Cat Treats Tasty Chicken Flavor, 30 oz. Tub (Packaging May Vary)', 19.3, 'https://m.media-amazon.com/images/I/81xLTrwlNbL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
+(5, 4, 3, 1, 'Blue Buffalo Wilderness Rocky Mountain Recipe High Protein Grain Free, Natural Adult Dry Dog Food', 56.99, 'https://m.media-amazon.com/images/I/71LtXuEA1sL._AC_UL320_.jpg', 'USD'),
+(6, 2, 2, 4, 'Royal Canin Small Adult Dry Dog Food', 41.99, 'https://m.media-amazon.com/images/I/81ulRQkt+7L._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
+(7, 4, 1, 4, 'Purina Pro Plan Small Breed Dry Dog Food, FOCUS Chicken & Rice Formula', 47.99, 'https://m.media-amazon.com/images/I/81YYm5WFAdL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
+(8, 1, 2, 5, 'Iams Proactive Health Adult Large Breed Dry Dog Food Chicken', 41.99, 'https://m.media-amazon.com/images/I/810vMEI+w3L._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
+(9, 2, 3, 6, 'Pedigree Adult Dry Dog Food, Chicken & Steak', 23.99, 'https://m.media-amazon.com/images/I/513Zc3U96TL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
+(10, 2, 3, 6, 'Nutro Wholesome Essentials Adult Dry Dog Food Farm-Raised Chicken, Brown Rice & Sweet Potato Recipe', 21.99, 'https://m.media-amazon.com/images/I/71Azp-504uL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
+(11, 2, 3, 6, 'Purina ONE Natural Dry Dog Food, SmartBlend Chicken & Rice Formula', 21.99, 'https://m.media-amazon.com/images/I/71Azp-504uL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
+(12, 3, 2, 2, 'Cesar Small Breed Dry Dog Food Filet Mignon Flavor with Spring Vegetables Garnish', 17.99, 'https://m.media-amazon.com/images/I/91B4JZnSA6L._AC_UL640_FMwebp_QL65_.jpg', 'USD');
+/* (13, 3, 3, 3, 'Hill''s Science Diet Adult Small Bites Chicken & Barley Recipe Dry Dog Food', 41.99, 'https://m.media-amazon.com/images/I/612RC6H3yuL._AC_UL640_FMwebp_QL65_.jpg', 'USD'), */
+/* (14, 2, 2, 3, 'Taste of the Wild High Prairie Grain-Free Dry Dog Food', 48.99, 'https://m.media-amazon.com/images/I/81h9Az88HpL._AC_UL640_FMwebp_QL65_.jpg', 'USD'); */
 
 create table if not exists product_images (
   id serial,

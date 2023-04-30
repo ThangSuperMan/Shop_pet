@@ -7,11 +7,14 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shop_pet.models.Brand;
@@ -40,12 +43,26 @@ public class ProductController {
   private BrandService brandService;
   @Autowired
   private FoodFlavorService foodFlavorService;
-
+  
   @GetMapping("/products")
-  public List<Product> getAllProducts() {
-    List<Product> products = productService.selectProducts();
+  public List<Product> getAllProducts(
+    @RequestParam(defaultValue = "1") Integer pageNumber, 
+    @RequestParam(defaultValue = "12") Integer pageSize
+  ) {
+    logger.info("ProductController getAllProducts() is running...");
+    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    System.out.println("pageNumber :>> " + pageNumber);
+    System.out.println("pageSize :>> " + pageSize);
+    Integer offset = pageable.getPageSize() * (pageable.getPageNumber() - 1); 
+    List<Product> products = productService.selectProducts(pageable, offset);
     return products;
   }
+
+  // @GetMapping("/products")
+  // public List<Product> getAllProducts() {
+  //   List<Product> products = productService.selectProducts();
+  //   return products;
+  // }
 
   public boolean isFoodProduct(Long productId) {
     int count = foodFlavorService.countNumberOfFlavors(productId);

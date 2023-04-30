@@ -1,13 +1,16 @@
 package com.example.shop_pet.services.Product;
 
-import com.example.shop_pet.models.Product;
 import java.util.List;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.example.shop_pet.models.Product;
 
 @Repository
 public class ProductService {
@@ -15,15 +18,30 @@ public class ProductService {
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
-
-  public List<Product> selectProducts() {
+  
+  // With paging method
+  // Integer pageNo, Integer pageSize, String sortBy
+  // Integer pageNo, Integer pageSize, Integer offset
+  public List<Product> selectProducts(Pageable pageable, Integer offset) {
     logger.info("ProductService selectProducts is running...");
-    // String sql = "SELECT *, to_char(created_at, 'YYYY/MM/dd HH24:MI:SS') as
-    // created_at_formated FROM products ";
-    String sql = "SELECT * FROM products";
-    List<Product> products = jdbcTemplate.query(sql, new ProductRowMapper());
+    String pageSql = """
+                    SELECT * 
+                    FROM products 
+                    ORDER BY id
+                    LIMIT ? OFFSET ?
+                    """;
+    List<Product> products = jdbcTemplate.query(pageSql, new ProductRowMapper(), new Object[] {pageable.getPageSize(), offset});
     return products;
   }
+
+  // public List<Product> selectProducts() {
+  //   logger.info("ProductService selectProducts is running...");
+  //   // String sql = "SELECT *, to_char(created_at, 'YYYY/MM/dd HH24:MI:SS') as
+  //   // created_at_formated FROM products ";
+  //   String sql = "SELECT * FROM products";
+  //   List<Product> products = jdbcTemplate.query(sql, new ProductRowMapper());
+  //   return products;
+  // }
 
   public Optional<Product> selectProductById(Long id) {
     logger.info("BookService, selectProductById is running...");
