@@ -18,10 +18,17 @@ public class ProductService {
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
-  
-  // With paging method
-  // Integer pageNo, Integer pageSize, String sortBy
-  // Integer pageNo, Integer pageSize, Integer offset
+
+  public Integer totalProducts() {
+    logger.info("ProductService totalProducts is running");
+    String sql = """ 
+                SELECT count(*)
+                FROM products
+                """;
+    int total = jdbcTemplate.queryForObject(sql, Integer.class);
+    return total;
+  }
+
   public List<Product> selectProducts(Pageable pageable, Integer offset) {
     logger.info("ProductService selectProducts is running...");
     String pageSql = """

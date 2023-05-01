@@ -32,6 +32,7 @@ import com.example.shop_pet.services.ProductImage.ProductImageService;
 @RequestMapping("/api/v1")
 public class ProductController {
   Logger logger = LoggerFactory.getLogger(getClass());
+  Integer itemsPerPage = 12;
 
   @Autowired
   private ProductService productService;
@@ -43,19 +44,25 @@ public class ProductController {
   private BrandService brandService;
   @Autowired
   private FoodFlavorService foodFlavorService;
-  
+
   @GetMapping("/products")
-  public List<Product> getAllProducts(
+  public ResponseEntity<?> getAllProducts(
     @RequestParam(defaultValue = "1") Integer pageNumber, 
     @RequestParam(defaultValue = "12") Integer pageSize
   ) {
     logger.info("ProductController getAllProducts() is running...");
     Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    Integer totalPages = productService.totalProducts() / itemsPerPage;
+    System.out.println("totalPage :>> " + totalPages);
     System.out.println("pageNumber :>> " + pageNumber);
     System.out.println("pageSize :>> " + pageSize);
     Integer offset = pageable.getPageSize() * (pageable.getPageNumber() - 1); 
     List<Product> products = productService.selectProducts(pageable, offset);
-    return products;
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("totalPages", totalPages);
+    map.put("products", products);
+    // return products;
+    return new ResponseEntity<>(map, HttpStatus.OK);
   }
 
   // @GetMapping("/products")

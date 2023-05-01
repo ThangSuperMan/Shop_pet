@@ -116,7 +116,19 @@ insert into products (id, brand_id, inventory_id, category_pet_supplie_id, title
 (9, 2, 3, 6, 'Pedigree Adult Dry Dog Food, Chicken & Steak', 23.99, 'https://m.media-amazon.com/images/I/513Zc3U96TL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
 (10, 2, 3, 6, 'Nutro Wholesome Essentials Adult Dry Dog Food Farm-Raised Chicken, Brown Rice & Sweet Potato Recipe', 21.99, 'https://m.media-amazon.com/images/I/71Azp-504uL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
 (11, 2, 3, 6, 'Purina ONE Natural Dry Dog Food, SmartBlend Chicken & Rice Formula', 21.99, 'https://m.media-amazon.com/images/I/71Azp-504uL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
-(12, 3, 2, 2, 'Cesar Small Breed Dry Dog Food Filet Mignon Flavor with Spring Vegetables Garnish', 17.99, 'https://m.media-amazon.com/images/I/91B4JZnSA6L._AC_UL640_FMwebp_QL65_.jpg', 'USD');
+(12, 3, 2, 2, 'Cesar Small Breed Dry Dog Food Filet Mignon Flavor with Spring Vegetables Garnish', 17.99, 'https://m.media-amazon.com/images/I/91B4JZnSA6L._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
+(13, 3, 2, 2, 'Van Ness 10-Pound Food Container with Fresh-Tite Seal (FC10) white', 17.99, 'https://m.media-amazon.com/images/I/91V1l27TmCS._AC_UL640_QL65_.jpg', 'USD'),
+(14, 3, 2, 2, 'Purina Moist & Meaty Dog Food, Steak Flavor - 36 ct. Pouch', 17.99, 'https://m.media-amazon.com/images/I/817CK5y6pyL._AC_UL640_QL65_.jpg', 'USD'),
+(15, 3, 2, 2, 'Manna Pro Crushed Oyster Shell - Calcium Supplement for Laying Hens - Chicken Feed for Egg-Laying Chickens - 5 lbs', 17.99, 'https://m.media-amazon.com/images/I/81XjNiiisDL._AC_UL640_QL65_.jpg', 'USD'),
+(16, 3, 2, 2, 'Ultra Micro Crystals Cat Litter 5 pounds', 17.99, 'https://m.media-amazon.com/images/I/61X5Rem3qLL._AC_UL640_QL65_.jpg', 'USD'),
+(17, 3, 2, 2, 'Virbac CET VEGGIEDENT FR3SH Tartar Control Chews for Dogs', 17.99, 'https://m.media-amazon.com/images/I/91B4JZnSA6L._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
+(18, 3, 2, 2, 'Purina Friskies Gravy Wet Cat Food Variety Pack, Extra Gravy Chunky - (24) 5.5 oz. Cans', 17.99, 'https://m.media-amazon.com/images/I/81qBrPoSKpL._AC_UL640_QL65_.jpg', 'USD'),
+(19, 3, 2, 2, 'Blue Buffalo BLUE Bits Natural Soft-Moist Training Dog Treats, Beef Recipe 19-oz Bag', 17.99, 'https://m.media-amazon.com/images/I/81zpVGn9E+L._AC_UL640_QL65_.jpg', 'USD'),
+(20, 3, 2, 2, 'FELINE GREENIES Adult Dental Cat Treats, Savory Salmon Flavor, 9.75 oz. Tub', 299, 'https://m.media-amazon.com/images/I/819y0lLPQsL._AC_UL640_QL65_.jpg', 'USD'),
+(21, 3, 2, 2, 'Purina Fancy Feast Gravy Lovers Chicken Feast in Gravy Gourmet Cat Food in Wet Cat Food Gravy - (24) 3 oz. Cans', 5.99, 'https://m.media-amazon.com/images/I/71csCOmueiL._AC_UL640_QL65_.jpg', 'USD'),
+(22, 3, 2, 2, 'Blue Dog Bakery Natural Dog Treats, Softies, Peanut Butter Flavor, 16.2oz Bag, 1 Bag', 17.99, 'https://m.media-amazon.com/images/I/71csCOmueiL._AC_UL640_QL65_.jpg', 'USD'),
+(23, 3, 2, 2, 'Resolve Ultra Pet Stain & Odor Remover Spray, 32oz', 17.99, 'https://m.media-amazon.com/images/I/71csCOmueiL._AC_UL640_QL65_.jpg', 'USD'),
+(24, 3, 2, 2, 'CESAR Small Breed Dry Dog Food Filet Mignon Flavor with Spring Vegetables Garnish Dog Kibble, 12 lb. Bag', 17.99, 'https://m.media-amazon.com/images/I/71r-BDNxKxL._AC_UL640_QL65_.jpg', 'USD');
 /* (13, 3, 3, 3, 'Hill''s Science Diet Adult Small Bites Chicken & Barley Recipe Dry Dog Food', 41.99, 'https://m.media-amazon.com/images/I/612RC6H3yuL._AC_UL640_FMwebp_QL65_.jpg', 'USD'), */
 /* (14, 2, 2, 3, 'Taste of the Wild High Prairie Grain-Free Dry Dog Food', 48.99, 'https://m.media-amazon.com/images/I/81h9Az88HpL._AC_UL640_FMwebp_QL65_.jpg', 'USD'); */
 
