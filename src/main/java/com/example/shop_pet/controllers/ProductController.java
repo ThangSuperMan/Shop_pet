@@ -33,6 +33,7 @@ import com.example.shop_pet.services.ProductImage.ProductImageService;
 public class ProductController {
   Logger logger = LoggerFactory.getLogger(getClass());
   Integer itemsPerPage = 12;
+  Integer pageSize = 12;
 
   @Autowired
   private ProductService productService;
@@ -47,8 +48,7 @@ public class ProductController {
 
   @GetMapping("/products")
   public ResponseEntity<?> getAllProducts(
-    @RequestParam(defaultValue = "1") Integer pageNumber, 
-    @RequestParam(defaultValue = "12") Integer pageSize
+    @RequestParam(defaultValue = "1") Integer pageNumber 
   ) {
     logger.info("ProductController getAllProducts() is running...");
     Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -59,9 +59,18 @@ public class ProductController {
     Integer offset = pageable.getPageSize() * (pageable.getPageNumber() - 1); 
     List<Product> products = productService.selectProducts(pageable, offset);
     HashMap<String, Object> map = new HashMap<String, Object>();
-    map.put("totalPages", totalPages);
     map.put("products", products);
-    // return products;
+    if (totalPages == 0) {
+      return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+    map.put("totalPages", totalPages);
+
+    if (pageNumber > totalPages) {
+      System.out.println("pageNumber > totalPages"); 
+      String errorMessage = "The page you chosed was run out of the available page, please choose another one!";
+      map.put("errorMessage", errorMessage);
+      return new ResponseEntity<>(map, HttpStatus.OK);
+    }
     return new ResponseEntity<>(map, HttpStatus.OK);
   }
 
