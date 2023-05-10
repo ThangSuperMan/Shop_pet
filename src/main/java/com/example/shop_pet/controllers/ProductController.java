@@ -48,15 +48,14 @@ public class ProductController {
 
   @GetMapping("/products")
   public ResponseEntity<?> getAllProducts(
-    @RequestParam(defaultValue = "1") Integer pageNumber 
-  ) {
+      @RequestParam(defaultValue = "1") Integer pageNumber) {
     logger.info("ProductController getAllProducts() is running...");
     Pageable pageable = PageRequest.of(pageNumber, pageSize);
     Integer totalPages = productService.totalProducts() / itemsPerPage;
     System.out.println("totalPage :>> " + totalPages);
     System.out.println("pageNumber :>> " + pageNumber);
     System.out.println("pageSize :>> " + pageSize);
-    Integer offset = pageable.getPageSize() * (pageable.getPageNumber() - 1); 
+    Integer offset = pageable.getPageSize() * (pageable.getPageNumber() - 1);
     List<Product> products = productService.selectProducts(pageable, offset);
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("products", products);
@@ -66,8 +65,7 @@ public class ProductController {
     map.put("totalPages", totalPages);
 
     if (pageNumber > totalPages) {
-      System.out.println("pageNumber > totalPages"); 
-      String errorMessage = "The page you chosed was run out of the available page, please choose another one!";
+      String errorMessage = "The page you chose was run out of the available page, please choose another one!";
       map.put("errorMessage", errorMessage);
       return new ResponseEntity<>(map, HttpStatus.OK);
     }
@@ -76,8 +74,8 @@ public class ProductController {
 
   // @GetMapping("/products")
   // public List<Product> getAllProducts() {
-  //   List<Product> products = productService.selectProducts();
-  //   return products;
+  // List<Product> products = productService.selectProducts();
+  // return products;
   // }
 
   public boolean isFoodProduct(Long productId) {

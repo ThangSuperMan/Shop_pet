@@ -1,7 +1,7 @@
 package com.example.shop_pet.config;
 
-import com.example.shop_pet.filter.JwtAuthFilter;
 import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.example.shop_pet.filter.JwtAuthFilter;
 
 @Configuration
 // @EnableWebSecurity
@@ -72,7 +74,8 @@ public class SecurityConfig {
         .cors()
         .and()
         .authorizeHttpRequests()
-        .requestMatchers("/api/v1/products/**", "/api/v1/users/**", "/api/v1/signin", "/api/v1/signup")
+        .requestMatchers("/api/v1/products/**", "/api/v1/geolocation", "/api/v1/users/**", "/api/v1/signin",
+            "/api/v1/signup")
         .permitAll()
         .and()
         .authorizeHttpRequests()
@@ -82,10 +85,6 @@ public class SecurityConfig {
         .authorizeHttpRequests()
         .requestMatchers("/api-docs/**", "/swagger-ui/**")
         .permitAll()
-        // .and()
-        // .authorizeHttpRequests()
-        // .requestMatchers("/books/**")
-        // .authenticated()
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -15,7 +15,8 @@ public class Product {
   private String createdAt;
   private String updatedAt;
 
-  public Product(String id, String brandId, String title, double price, String imageUrl, String moneyType, String createdAt,
+  public Product(String id, String brandId, String title, double price, String imageUrl, String moneyType,
+      String createdAt,
       String updatedAt) {
     this.id = id;
     this.brandId = brandId;

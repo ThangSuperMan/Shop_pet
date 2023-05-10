@@ -9,6 +9,11 @@
 jwt:
   secret: 2F413F442A472D4B6150645367566B59703373367639792442264529482B4D62
 
+# Google Maps api keys
+google:
+  api:
+    key: AIzaSyAjFS3c_q0ub5-ziyV4jXzdknmpNPa4bDk
+
 # Postgresql
 app:
   datasource:
