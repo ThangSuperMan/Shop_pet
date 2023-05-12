@@ -133,7 +133,7 @@ public class UserController {
   @PostMapping("/signin")
   // public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
   public ResponseEntity<?> authenticateAndGetToken(@RequestBody @Valid AuthRequest authRequest) {
-    logger.info("/books/signin just triggered!");
+    logger.info("/api/v1/signin just triggered!");
 
     Optional<User> user = userService.selectUserByUsername(authRequest.getUsername());
     if (user.isEmpty()) {

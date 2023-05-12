@@ -14,7 +14,7 @@
 
 /*
 
-Description: 11 total number of tables in the database right away.
+Description: 14 total number of tables in the database right away.
 
 */
 
@@ -217,6 +217,25 @@ insert into product_detail (id, product_id, description) values
 (1, 1, 'Thirty (30) 3 oz. Cans - Purina Fancy Feast Grain Free Pate Wet Cat Food Variety Pack, Poultry & Beef Collection $$$Made with turkey. chicken or beef. Three different recipes for the variety your cat loves $$$Provides 100 percent complete and balanced nutrition for adult cats. Pleasing pate texture $$$Essential vitamins and minerals in every serving. Backed by Purina, a trusted leader in pet food $$$Delicious tastes she''s sure to adore. Multi-can variety pack makes it easy to stock your pantry'),
 (2, 2, 'Tender, delicate bites for a tempting texture. Essential vitamins and minerals to support her overall health'),
 (3, 3, 'Small Dog Dental Treats: One GREENIES dental treat a day is all it takes for clean teeth, fresh breath and a happy dog; These irresistibly tasty treats feature a delightfully chewy texture that helps fight plaque and tartar $$$ Supports Oral Health: The chewy texture helps clean teeth, maintain healthy gums and freshen breath to make mouths happy day after day $$$ Find the Right Treat: We make GREENIES Dental Treats for every age from puppy to mature, and every dog size from small to large, plus we offer Grain Free, Weight Management, Blueberry Flavor and Fresh Flavor varieties $$$Made With Natural Ingredients Plus Vitamins, Minerals and Nutrients: GREENIES dental treats are easy to digest with highly soluble ingredients and provide balanced nutrition for adult dogs for healthy and delicious treating $$$Veterinarian Recommended for Dental Care: These dental treats are made from high quality ingredients combined into soft chews your dog will love');
+
+create table if not exists orders (
+  id serial,
+  user_id uuid not null,
+  created_at timestamptz not null default now(),
+  is_free_shipping bool not null,
+  total numeric(10,2) not null,
+  primary key(id),
+  constraint fk_order_user foreign key(user_id) references users(id) on delete set null
+);
+
+create table if not exists order_items (
+  order_id integer not null,
+  product_id integer not null,
+  quantity smallint not null,
+  primary key(order_id, product_id),
+  constraint fk_order_item_product foreign key(product_id) references products(id) on delete set null,
+  constraint fk_order_item_order foreign key(order_id) references orders(id) on delete set null
+);
 
 create table if not exists reviews (
   id serial,
