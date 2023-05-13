@@ -14,6 +14,13 @@ google:
   api:
     key: AIzaSyAjFS3c_q0ub5-ziyV4jXzdknmpNPa4bDk
 
+# Paypal
+paypal:
+  mode: sandbox
+  client:
+    id: AZSoHjXvJB74zwxFzE0zV0V54guze1P2nHLB3oAoDmcZa4hxpbqzCCRSLNngHKuDWHzfRAzk-GKPgSPJ
+    secret: EBoH21wKvtcjNjjY45PhiFIdaKHY2PEz7HlMgQM3Gl3Dn8lCFW-7pahbe-Ycu-OUvpzZ7nrt1k9tzJxj
+
 # Postgresql
 app:
   datasource:
