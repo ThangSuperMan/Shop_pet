@@ -15,9 +15,25 @@ public class UserService {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
+  
+  // count = 0 => This is the first order
+  // Just get the order that have the payment_status = 'unpaid'
+  public Integer totalOrdersByUserId() {
+  logger.info("ProductService totalProducts is running");
+  String sql = """ 
+              SELECT count(*)
+              FROM orders
+              where user_id
+              """;
+  int total = jdbcTemplate.queryForObject(sql, Integer.class);
+  return total;
+  }
+
   public int insertUser(User user) {
     logger.info("insertUser service is running...");
-    String sql = "insert into users (username, password, email) values (?, ?, ?)";
+    String sql = """
+                  INSERT INTO users (username, password, email)
+                  values (?, ?, ?)""";
     Boolean isUsernameExist = isUsernameExist(user.getUsername());
     if (Boolean.TRUE.equals(isUsernameExist)) {
       logger.error("Username exists, please choose another one!");

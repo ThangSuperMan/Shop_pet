@@ -50,6 +50,13 @@ public class UserController {
     return "This is secret admin resouces data";
   }
 
+  @GetMapping("/user")
+  @PreAuthorize("hasAuthority('USER')")
+  public String forUser() {
+    logger.info("UserController forUser method is running...");
+    return "This is secret user resouces data";
+  }
+
   // @GetMapping("/user")
   // @PreAuthorize("hasAuthority('USER')")
   // public String renderUserResoucePage() {

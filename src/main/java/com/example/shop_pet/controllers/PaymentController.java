@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.shop_pet.models.Order;
 import com.example.shop_pet.services.Paypal.PaypalService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
@@ -33,9 +32,9 @@ public class PaymentController {
   PaypalService paypalService;
 
   @PostMapping("/payment")
-  public ResponseEntity<?> payment(@RequestBody Order order) throws PayPalRESTException {
+  public ResponseEntity<?> payment(@RequestBody com.example.shop_pet.models.Payment order) throws PayPalRESTException {
     logger.info("PaymentController payment method is running");
-    Payment payment = paypalService.createPayment(order.getPrice(), order.getCurrency(), order.getMethod(), order.getIntent(), order.getDescription(), BASE_URL + CANCEL_URL, BASE_URL + SUCCESS_URL);
+    Payment payment = paypalService.createPayment(order.getTotal(), order.getCurrency(), order.getMethod(), order.getIntent(), order.getDescription(), BASE_URL + CANCEL_URL, BASE_URL + SUCCESS_URL);
     HashMap<String, String> map = new HashMap<>();
 
     for (Links link : payment.getLinks()) {

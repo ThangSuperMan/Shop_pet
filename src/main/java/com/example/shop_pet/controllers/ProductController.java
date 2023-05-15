@@ -1,8 +1,12 @@
 package com.example.shop_pet.controllers;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,17 +50,31 @@ public class ProductController {
   @Autowired
   private FoodFlavorService foodFlavorService;
 
+  public void addSeoProductTiles(List<Product> products) {
+    // Modified the product seo title for product detail page use
+    if (!products.isEmpty()) {
+      for (Product product : products) {
+        String seoTitle = product.getTitle().replace(" ", "-");
+        product.setSeoTitle(seoTitle);
+        System.out.println("product.getSeoTitle :>> " + product.getSeoTitle());
+      }
+    }
+  }
+
   @GetMapping("/products")
   public ResponseEntity<?> getAllProducts(
       @RequestParam(defaultValue = "1") Integer pageNumber) {
     logger.info("ProductController getAllProducts() is running...");
     Pageable pageable = PageRequest.of(pageNumber, pageSize);
     Integer totalPages = productService.totalProducts() / itemsPerPage;
+
     System.out.println("totalPage :>> " + totalPages);
     System.out.println("pageNumber :>> " + pageNumber);
     System.out.println("pageSize :>> " + pageSize);
+
     Integer offset = pageable.getPageSize() * (pageable.getPageNumber() - 1);
     List<Product> products = productService.selectProducts(pageable, offset);
+    addSeoProductTiles(products);
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("products", products);
     if (totalPages == 0) {
@@ -83,13 +101,29 @@ public class ProductController {
     return count > 0 ? true : false;
   }
 
-  @GetMapping("/products/{id}")
-  public ResponseEntity<?> getProduct(@PathVariable Long id) {
+  @GetMapping("/products/{productTitle}")
+  // @GetMapping("/products/{id}")
+  // public ResponseEntity<?> getProduct(@PathVariable Long id) {
+  public ResponseEntity<?> getProduct(@PathVariable String productTitle) {
     logger.info("ProductController getProduct method is running...");
-    Optional<Product> product = productService.selectProductById(id);
-    Optional<ProductDetail> productDetail = productDetailService.selectProductDetailById(id);
-    List<ProductImage> productImages = productImageService.selectProductImages(id);
+    // Convert from product-title -> product title
+    String originalProductTitle = productTitle.replace("-", " ");
+    System.out.println("productTitle :>> " + productTitle);
+
+    Optional<Product> product = productService.selectProductByTitle(originalProductTitle);
+    // Optional<Product> product = productService.selectProductById(id);
+    logger.info("product :>> " + product);
+    
     HashMap<String, Object> map = new HashMap<String, Object>();
+    product.ifPresent(obj -> {
+      Long productId = Long.parseLong(obj.getId());
+      Optional<ProductDetail> productDetail = productDetailService.selectProductDetailById(productId);
+      List<ProductImage> productImages = productImageService.selectProductImages(productId);
+      map.put("productDetail", productDetail);
+      map.put("productImages", productImages);
+    });
+    // Optional<ProductDetail> productDetail = productDetailService.selectProductDetailById(id);
+    // List<ProductImage> productImages = productImageService.selectProductImages(id);
 
     if (product.isPresent()) {
       Product prod = product.get();
@@ -105,8 +139,8 @@ public class ProductController {
       map.put("brand", brand);
     }
     map.put("product", product);
-    map.put("productDetail", productDetail);
-    map.put("productImages", productImages);
+    // map.put("productDetail", productDetail);
+    // map.put("productImages", productImages);
     return new ResponseEntity<>(map, HttpStatus.OK);
   }
 }

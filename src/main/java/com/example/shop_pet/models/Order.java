@@ -1,25 +1,24 @@
 package com.example.shop_pet.models;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class Order {
+  private String id;
+  private String userId;
+  private String createdAt;
+  private boolean isFreeShipping;
+  private String paymentStatus;
+  private int total;
 
-  private double price;
-  private String currency;
-  private String method;
-  private String intent;
-  private String description;
-
-  public Order(double price, String currency, String method, String intent, String description) {
-    this.price = price;
-    this.currency = currency;
-    this.method = method;
-    this.intent = intent;
-    this.description = description;
+  public Order(String id, String userId, String createdAt, boolean isFreeShipping, String paymentStatus, int total) {
+    this.id = id;
+    this.userId = userId;
+    this.createdAt = createdAt;
+    this.isFreeShipping = isFreeShipping; 
+    this.paymentStatus = paymentStatus;
+    this.total = total;
   }
 }

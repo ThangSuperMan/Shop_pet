@@ -9,6 +9,7 @@ public class Product {
   private String id;
   private String brandId;
   private String title;
+  private String seoTitle;
   private double price;
   private String imageUrl;
   private String moneyType;

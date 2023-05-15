@@ -29,7 +29,15 @@ public class ProductService {
     return total;
   }
 
+  public void regenerateView(Pageable pageable, Integer offset) {
+    String sqlCreateView = "CREATE OR REPLACE VIEW products_sorted_limit_offset_view AS " +
+        "SELECT * FROM get_products_sorted_limit_offset($1, $2)";
+
+    jdbcTemplate.update(sqlCreateView, pageable.getPageSize(), offset);
+}
+
   public List<Product> selectProducts(Pageable pageable, Integer offset) {
+    // Views with functions
     logger.info("ProductService selectProducts is running...");
     String pageSql = """
                     SELECT * 
@@ -37,6 +45,29 @@ public class ProductService {
                     ORDER BY id
                     LIMIT ? OFFSET ?
                     """;
+    // String pageSql = """
+    //                  CREATE OR REPLACE VIEW products_sorted_limit_offset_view AS
+    //                  SELECT * 
+    //                  FROM get_products_sorted_limit_offset($1, $2)
+    //                 """;
+
+    // String sqlCreateView = "CREATE OR REPLACE VIEW products_sorted_limit_offset_view AS " +
+    //          "SELECT * FROM get_products_sorted_limit_offset($1, $2)";
+    // CREATE OR REPLACE VIEW products_sorted_limit_offset_view AS SELECT * FROM get_products_sorted_limit_offset(10, 0);
+
+    // regenerateView(pageable, offset);
+    // String sqlGetDataFromView = "select * from products_sorted_limit_offset_view";
+
+    // int limitValue = 10;
+    // int offsetValue = 0;
+
+    // jdbcTemplate.execute(sqlCreateView, (PreparedStatementCallback<Object>) ps -> {
+    //     ps.setInt(1, pageable.getPageSize());
+    //     ps.setInt(2, offset);
+    //     return ps.execute();
+    // });
+
+    logger.error("here");
     List<Product> products = jdbcTemplate.query(pageSql, new ProductRowMapper(), new Object[] {pageable.getPageSize(), offset});
     return products;
   }
@@ -49,6 +80,17 @@ public class ProductService {
   //   List<Product> products = jdbcTemplate.query(sql, new ProductRowMapper());
   //   return products;
   // }
+
+  public Optional<Product> selectProductByTitle(String title) {
+    logger.info("BookService, selectProductById is running...");
+    String sql = """
+              SELECT *, to_char(created_at, 'YYYY/MM/dd HH24:MI:SS') as created_at_formated
+              FROM products 
+              WHERE title = ?
+              """;
+    Optional<Product> product = jdbcTemplate.query(sql, new ProductRowMapper(), title).stream().findFirst();
+    return product;
+  }
 
   public Optional<Product> selectProductById(Long id) {
     logger.info("BookService, selectProductById is running...");
