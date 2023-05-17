@@ -33,7 +33,8 @@ public class UserService {
     logger.info("insertUser service is running...");
     String sql = """
                   INSERT INTO users (username, password, email)
-                  values (?, ?, ?)""";
+                  VALUES (?, ?, ?)
+                """;
     Boolean isUsernameExist = isUsernameExist(user.getUsername());
     if (Boolean.TRUE.equals(isUsernameExist)) {
       logger.error("Username exists, please choose another one!");

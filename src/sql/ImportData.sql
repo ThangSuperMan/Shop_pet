@@ -139,17 +139,17 @@ insert into products (id, brand_id, inventory_id, category_pet_supplie_id, title
 (12, 3, 2, 2, 'Cesar Small Breed Dry Dog Food Filet Mignon Flavor with Spring Vegetables Garnish', 17.99, 'https://m.media-amazon.com/images/I/91B4JZnSA6L._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
 (13, 3, 2, 2, 'Van Ness 10 Pound Food Container with Fresh Tite Seal (FC10) white', 17.99, 'https://m.media-amazon.com/images/I/91V1l27TmCS._AC_UL640_QL65_.jpg', 'USD'),
 (14, 3, 2, 2, 'Purina Moist & Meaty Dog Food, Steak Flavor', 17.99, 'https://m.media-amazon.com/images/I/817CK5y6pyL._AC_UL640_QL65_.jpg', 'USD'),
-(15, 3, 2, 2, 'Manna Pro Crushed Oyster Shell Calcium Supplement for Laying Hens - Chicken Feed for Egg-Laying Chickens - 5 lbs', 17.99, 'https://m.media-amazon.com/images/I/81XjNiiisDL._AC_UL640_QL65_.jpg', 'USD'),
+(15, 3, 2, 2, 'Manna Pro Crushed Oyster Shell Calcium Supplement for Laying Hens, Chicken Feed for Egg Laying Chickens', 17.99, 'https://m.media-amazon.com/images/I/81XjNiiisDL._AC_UL640_QL65_.jpg', 'USD'),
 (16, 3, 2, 2, 'Ultra Micro Crystals Cat Litter 5 pounds', 17.99, 'https://m.media-amazon.com/images/I/61X5Rem3qLL._AC_UL640_QL65_.jpg', 'USD'),
 (17, 3, 2, 2, 'Virbac CET VEGGIEDENT FR3SH Tartar Control Chews for Dogs', 17.99, 'https://m.media-amazon.com/images/I/91B4JZnSA6L._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
 (18, 3, 2, 2, 'Purina Friskies Gravy Wet Cat Food Variety Pack, Extra Gravy Chunky', 17.99, 'https://m.media-amazon.com/images/I/81qBrPoSKpL._AC_UL640_QL65_.jpg', 'USD'),
-(19, 3, 2, 2, 'Blue Buffalo BLUE Bits Natural Soft Moist Training Dog Treats, Beef Recipe 19-oz Bag', 17.99, 'https://m.media-amazon.com/images/I/81zpVGn9E+L._AC_UL640_QL65_.jpg', 'USD'),
+(19, 3, 2, 2, 'Blue Buffalo BLUE Bits Natural Soft Moist Training Dog Treats, Beef Recipe 19 oz Bag', 17.99, 'https://m.media-amazon.com/images/I/81zpVGn9E+L._AC_UL640_QL65_.jpg', 'USD'),
 (20, 3, 2, 2, 'FELINE GREENIES Adult Dental Cat Treats, Savory Salmon Flavor, 9.75 oz. Tub', 299, 'https://m.media-amazon.com/images/I/819y0lLPQsL._AC_UL640_QL65_.jpg', 'USD'),
 (21, 3, 2, 2, 'Purina Fancy Feast Gravy Lovers Chicken Feast in Gravy Gourmet Cat Food in Wet Cat Food Gravy - (24) 3 oz. Cans', 5.99, 'https://m.media-amazon.com/images/I/71csCOmueiL._AC_UL640_QL65_.jpg', 'USD'),
 (22, 3, 2, 2, 'Blue Dog Bakery Natural Dog Treats, Softies, Peanut Butter Flavor, 16.2oz Bag, 1 Bag', 17.99, 'https://m.media-amazon.com/images/I/612RC6H3yuL._AC_UL640_QL65_.jpg', 'USD'),
 (23, 3, 2, 2, 'Resolve Ultra Pet Stain & Odor Remover Spray, 32oz', 17.99, 'https://m.media-amazon.com/images/I/819TnlK40bL._AC_UL640_QL65_.jpg', 'USD'),
 (24, 3, 2, 2, 'CESAR Small Breed Dry Dog Food Filet Mignon Flavor with Spring Vegetables Garnish Dog Kibble, 12 lb. Bag', 17.99, 'https://m.media-amazon.com/images/I/91MIYPd26AS._AC_UL640_QL65_.jpg', 'USD'),
-(25, 1, 2, 1, 'Blue Buffalo ife Protection Formula Natural Adult Dry Dog Food, Chicken and Brown Rice 5-lb Trial Size Bag', 24.5 , 'https://m.media-amazon.com/images/I/81DNZAmP0BL._AC_SX679_.jpg', 'USD'),
+(25, 1, 2, 1, 'Blue Buffalo ife Protection Formula Natural Adult Dry Dog Food, Chicken and Brown Rice 5lb Trial Size Bag', 24.5 , 'https://m.media-amazon.com/images/I/81DNZAmP0BL._AC_SX679_.jpg', 'USD'),
 (26, 2, 1, 1, 'CESAR Wet Do Food Classic Loaf in Sauce Poultry Variety Pack,. Easy Peel Trays with Real Chicken, Turkey or Duck, 3.5 Ounce', 13.24, 'https://m.media-amazon.com/images/I/71sghJOu2ML._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
 (27, 1, 2, 2, 'GREENES Original TEENIE Natural Dog Dental Care Chews Oral Health Dog Treats', 31.286, 'https://m.media-amazon.com/images/I/61rV7AbNcQL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
 (28, 2, 1, 2, 'TEMPTTIONS Classic Crunchy and Soft Cat Treats Tasty Chicken Flavor, 30 oz. Tub (Packaging May Vary)', 19.3, 'https://m.media-amazon.com/images/I/81xLTrwlNbL._AC_UL640_FMwebp_QL65_.jpg', 'USD'),
@@ -220,6 +220,8 @@ insert into product_detail (id, product_id, description) values
 (1, 1, 'Thirty (30) 3 oz. Cans - Purina Fancy Feast Grain Free Pate Wet Cat Food Variety Pack, Poultry & Beef Collection $$$Made with turkey. chicken or beef. Three different recipes for the variety your cat loves $$$Provides 100 percent complete and balanced nutrition for adult cats. Pleasing pate texture $$$Essential vitamins and minerals in every serving. Backed by Purina, a trusted leader in pet food $$$Delicious tastes she''s sure to adore. Multi-can variety pack makes it easy to stock your pantry'),
 (2, 2, 'Tender, delicate bites for a tempting texture. Essential vitamins and minerals to support her overall health'),
 (3, 3, 'Small Dog Dental Treats: One GREENIES dental treat a day is all it takes for clean teeth, fresh breath and a happy dog; These irresistibly tasty treats feature a delightfully chewy texture that helps fight plaque and tartar $$$ Supports Oral Health: The chewy texture helps clean teeth, maintain healthy gums and freshen breath to make mouths happy day after day $$$ Find the Right Treat: We make GREENIES Dental Treats for every age from puppy to mature, and every dog size from small to large, plus we offer Grain Free, Weight Management, Blueberry Flavor and Fresh Flavor varieties $$$Made With Natural Ingredients Plus Vitamins, Minerals and Nutrients: GREENIES dental treats are easy to digest with highly soluble ingredients and provide balanced nutrition for adult dogs for healthy and delicious treating $$$Veterinarian Recommended for Dental Care: These dental treats are made from high quality ingredients combined into soft chews your dog will love');
+
+-- updated_at timestamptz not null default now(),
 
 create table if not exists orders (
   id serial,

@@ -4,22 +4,59 @@ import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shop_pet.models.Order;
+import com.example.shop_pet.models.OrderItem;
+import com.example.shop_pet.services.Order.OrderService;
 
 @RestController
 @RequestMapping("/api/v1")
 public class OrderController {
   Logger logger = LoggerFactory.getLogger(UserController.class);
 
-  // @PostMapping("/orders/save")
-  // public ResponseEntity<?> saveOrder(@RequestBody Order order) {
-  //   logger.info("OrderController saveOrder method is running...");
-  //   HashMap<String, Object> map = new HashMap<>();
-  // }
+  @Autowired OrderService orderService;
+
+
+  @PostMapping("/orders")
+  @PreAuthorize("hasAuthority('USER')")
+  public ResponseEntity<?>getOrder (@RequestBody String userId) {
+    logger.info("OrderController getOrder method is running...");
+    HashMap<String, Object> orderItems = new HashMap();
+    return new ResponseEntity<>("Ok", HttpStatus.OK);
+  }
+
+  @PostMapping("/orders/save")
+  @PreAuthorize("hasAuthority('USER')")
+  public ResponseEntity<?> saveOrder(@RequestBody Order order) {
+    logger.info("OrderController saveOrder method is running...");
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("quote", "hello");
+    logger.info("Product info :>> " + order.toString());
+
+    OrderItem orderItems = new OrderItem(order.getId(), order.getProductId(), order.getQuantity());
+
+    int resultInsertOrder = orderService.insertOrder(order);
+    int resultInsertOrderItems = orderService.insertOrderItems(orderItems);
+
+    if (resultInsertOrder > 0) {
+      logger.info("Insert Order successfully");
+      String message = "Insert Order successfully";
+      map.put("messageOne", message);
+    }
+    if (resultInsertOrderItems > 0) {
+      logger.info("Insert OrderItems successfully");
+      String message = "Insert OrderItems successfully";
+      map.put("messageTwo", message);
+    }
+
+    return new ResponseEntity<>(map, HttpStatus.OK);
+  }
 }

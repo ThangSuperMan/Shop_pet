@@ -34,7 +34,7 @@ public class ProductService {
         "SELECT * FROM get_products_sorted_limit_offset($1, $2)";
 
     jdbcTemplate.update(sqlCreateView, pageable.getPageSize(), offset);
-}
+  }
 
   public List<Product> selectProducts(Pageable pageable, Integer offset) {
     // Views with functions
@@ -67,7 +67,6 @@ public class ProductService {
     //     return ps.execute();
     // });
 
-    logger.error("here");
     List<Product> products = jdbcTemplate.query(pageSql, new ProductRowMapper(), new Object[] {pageable.getPageSize(), offset});
     return products;
   }
@@ -88,7 +87,9 @@ public class ProductService {
               FROM products 
               WHERE title = ?
               """;
-    Optional<Product> product = jdbcTemplate.query(sql, new ProductRowMapper(), title).stream().findFirst();
+    Optional<Product> product = jdbcTemplate.query(sql, new ProductRowMapper(), title)
+                                .stream()
+                                .findFirst();
     return product;
   }
 

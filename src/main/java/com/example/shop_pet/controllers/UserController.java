@@ -1,12 +1,9 @@
 package com.example.shop_pet.controllers;
 
-import com.example.shop_pet.dto.AuthRequest;
-import com.example.shop_pet.models.User;
-import com.example.shop_pet.services.User.UserService;
-import com.example.shop_pet.utils.JwtUtils;
-import jakarta.validation.Valid;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +23,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.example.shop_pet.dto.AuthRequest;
+import com.example.shop_pet.models.User;
+import com.example.shop_pet.services.User.UserService;
+import com.example.shop_pet.utils.JwtUtils;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1")
 public class UserController {
   Logger logger = LoggerFactory.getLogger(UserController.class);
+  private final int BEGIN_INDEX = 7;
 
   @Autowired
   private AuthenticationManager authenticationManager;
@@ -52,9 +58,29 @@ public class UserController {
 
   @GetMapping("/user")
   @PreAuthorize("hasAuthority('USER')")
-  public String forUser() {
+  public ResponseEntity<?> forUser(HttpServletRequest request) {
     logger.info("UserController forUser method is running...");
-    return "This is secret user resouces data";
+    String authHeader = request.getHeader("Authorization");
+    if (authHeader == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization header not found");
+    }
+    String token = authHeader.substring(BEGIN_INDEX);
+    System.out.println("token :>> " + token);
+    String username = jwtUtils.extractUsername(token);
+    Optional<User> user = userService.selectUserByUsername(username);
+    System.out.println("User :>> " + user.toString());
+    if (user.isPresent()) {
+      Map<String, Object> map = new HashMap<>();
+      map.put("user", user.orElse(null));
+      logger.info("UserController forUser method is running...");
+      return ResponseEntity.ok(map);
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+    // userService.selectUserByUsername()
+    // logger.info("UserController forUser method is running...");
+    // return new ResponseEntity<>(map, HttpStatus.OK);
+    // return "This is secret user resouces data";
   }
 
   // @GetMapping("/user")
@@ -78,7 +104,7 @@ public class UserController {
     }
 
     map.put("isInvalidUrlParams", true);
-    return new ResponseEntity<>(map, HttpStatus.OK);
+    return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   // // USER
