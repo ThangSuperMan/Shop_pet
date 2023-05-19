@@ -1,1 +1,13 @@
-- How to use JWT and Postgresql with Data JDBC(Spring book library).
+# Shoppet server documentation
+
+## Features
+
+### User logic
+
+- Validate and authorization user with JWT (apply for user and admin)
+
+### Order logic
+
+- Add new order
+- Update new order
+- Keep track history order
