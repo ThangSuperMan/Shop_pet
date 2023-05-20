@@ -17,6 +17,8 @@ import com.example.shop_pet.models.Order;
 import com.example.shop_pet.models.OrderItem;
 import com.example.shop_pet.services.Order.OrderService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1")
 public class OrderController {
@@ -35,28 +37,30 @@ public class OrderController {
 
   @PostMapping("/orders/save")
   @PreAuthorize("hasAuthority('USER')")
-  public ResponseEntity<?> saveOrder(@RequestBody Order order) {
+  public ResponseEntity<?> saveOrder(@RequestBody @Valid Order order) {
     logger.info("OrderController saveOrder method is running...");
     HashMap<String, Object> map = new HashMap<String, Object>();
-    map.put("quote", "hello");
+
     logger.info("Product info :>> " + order.toString());
 
     OrderItem orderItems = new OrderItem(order.getId(), order.getProductId(), order.getQuantity());
 
     int resultInsertOrder = orderService.insertOrder(order);
-    int resultInsertOrderItems = orderService.insertOrderItems(orderItems);
+    // int resultInsertOrderItems = orderService.insertOrderItems(orderItems);
 
+    System.out.println("resultInsertOrder :>> " + resultInsertOrder);
     if (resultInsertOrder > 0) {
       logger.info("Insert Order successfully");
       String message = "Insert Order successfully";
       map.put("messageOne", message);
     }
-    if (resultInsertOrderItems > 0) {
-      logger.info("Insert OrderItems successfully");
-      String message = "Insert OrderItems successfully";
-      map.put("messageTwo", message);
-    }
+    // if (resultInsertOrderItems > 0) {
+    //   logger.info("Insert OrderItems successfully");
+    //   String message = "Insert OrderItems successfully";
+    //   map.put("messageTwo", message);
+    // }
 
+    // map.put("message", "nothing");
     return new ResponseEntity<>(map, HttpStatus.OK);
   }
 }

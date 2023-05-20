@@ -14,8 +14,8 @@ public class OrderRowMapper implements RowMapper<Order> {
   @Override
   @Nullable
   public Order mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-    String paymentStatusString = resultSet.getString("payment_status");
-    OrderEnum paymentStatus = convertToOrderEnum(paymentStatusString);
+    // String paymentStatusString = resultSet.getString("payment_status");
+    // OrderEnum paymentStatus = convertToOrderEnum(paymentStatusString);
 
     // New
     Order order = new Order();

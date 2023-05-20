@@ -19,6 +19,10 @@ public class OrderService {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
+  // public String selectOrderIdByPaymentStatus(String paymentStatus) {
+  //   logger.info("OrderService selectOrderIdByPaymentStatus method is running");
+  // }
+
   public Optional<Order> selectOrderUnpaidByUserId(String userId) {
     logger.info("OrderService ce is running...");
     String sql = """
@@ -37,18 +41,39 @@ public class OrderService {
     logger.info("OrderService insertOrderItems method is running...");
     String sql = """
               INSERT INTO order_items (order_id, product_id, quantity)
-              VALUES (?, ?, ?) 
+              VALUES (?, CAST(? AS INTEGER) , ?) 
               """;
     return jdbcTemplate.update(sql, orderItem.getOrderId(), orderItem.getProductId(), orderItem.getQuantity());
   }
   
-  public int insertOrder(Order order) {
+  public int insertOrder(Integer userId) {
     logger.info("OrderService insertOrder method is running...");
     String sql = """
-              INSERT INTO orders (user_id, is_free_shipping, payment_status, total)
+              INSERT INTO orders (user_id)
+              VALUES (?) 
+              """;
+    return jdbcTemplate.update(sql, userId);
+    // return jdbcTemplate.update(sql, order.getUserId(), order.isFreeShipping(), OrderEnum.pending, order.getTotal());
+  }
+
+  public int insertOrderDetail(Order order) {
+    logger.info("OrderService insertOrderDetail method is running...");
+    String sql = """
+              INSERT INTO order_detail (order_id, is_free_shipping, payment_status, total)
               VALUES (?, ?, CAST(? AS payment_status_enum), ?) 
               """;
     return jdbcTemplate.update(sql, order.getUserId(), order.isFreeShipping(), order.getPaymentStatus().toString(), order.getTotal());
-    // return jdbcTemplate.update(sql, order.getUserId(), order.isFreeShipping(), OrderEnum.pending, order.getTotal());
   }
+
+  public void updateOrderItemQuantityByOrderId(Integer quantity, String orderId) {
+    logger.info("OrderService updateOrderItemQuantityByOrderId method is running...");
+    String sql = """
+              UPDATE order_items 
+              
+              SET quantity = ? 
+              where order_id = ?
+              """;
+    jdbcTemplate.update(sql, quantity, orderId);
+  }
+
 }

@@ -28,6 +28,15 @@ create type unit_product_enum as enum ('lb', 'bag', 'kg');
 create type type_money_enum as enum ('USD', 'VND');
 create type payment_status_enum as enum ('unpaid', 'paid', 'pending', 'refunded');
 
+-- FUNCTIONS
+create or replace function update_for_updated_at_column()
+RETURNS trigger as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$ language plpgsql;
+
 create table if not exists users (
   id uuid default uuid_generate_v4(),
   username varchar(45) not null,
@@ -104,19 +113,11 @@ create table if not exists products (
   constraint fk_product_category_pet_supplie foreign key(category_pet_supplie_id) references category_pet_supplies(id) on delete set null
 );
 
--- Procedure and trigger
-create or replace function update_product_updated_at()
-RETURNS trigger as $$
-begin
-  new.updated_at = now();
-  return new;
-end;
-$$ language plpgsql;
-
+-- TRIGGER FOR PRODUCT TABLE 
 create trigger products_updated_at
 before update on products
 for each row
-execute function update_product_updated_at();
+execute function update_for_updated_at_column();
 
 create table if not exists prices (
   id serial,
@@ -208,7 +209,7 @@ create table if not exists product_detail (
   product_id integer not null, 
   description varchar(2500),
   primary key (id),
-  constraint fk_product_detail_product foreign key(product_id) references products(id) on delete set null
+  constraint fk_product_detail_product foreign key(product_id) references products(id) on delete cascade
 );
 
 /* Notes */
@@ -226,13 +227,20 @@ insert into product_detail (id, product_id, description) values
 create table if not exists orders (
   id serial,
   user_id uuid not null,
-  created_at timestamptz not null default now(),
   is_free_shipping bool not null default false,
   payment_status payment_status_enum default 'unpaid' not null,
   total numeric(10,2) not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
   primary key(id),
   constraint fk_order_user foreign key(user_id) references users(id) on delete set null
 );
+
+-- TRIGGER FOR ORDER DETAIL TABLE 
+create trigger order_updated_at
+before update on orders
+for each row
+execute function update_for_updated_at_column();
 
 create table if not exists order_items (
   order_id integer not null,
