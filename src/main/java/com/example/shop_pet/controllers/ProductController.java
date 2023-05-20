@@ -52,7 +52,6 @@ public class ProductController {
       for (Product product : products) {
         String seoTitle = product.getTitle().replace(" ", "-");
         product.setSeoTitle(seoTitle);
-        System.out.println("product.getSeoTitle :>> " + product.getSeoTitle());
       }
     }
   }
@@ -85,12 +84,6 @@ public class ProductController {
     }
     return new ResponseEntity<>(map, HttpStatus.OK);
   }
-
-  // @GetMapping("/products")
-  // public List<Product> getAllProducts() {
-  // List<Product> products = productService.selectProducts();
-  // return products;
-  // }
 
   public boolean isFoodProduct(Long productId) {
     int count = foodFlavorService.countNumberOfFlavors(productId);

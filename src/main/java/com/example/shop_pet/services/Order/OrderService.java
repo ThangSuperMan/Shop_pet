@@ -19,61 +19,55 @@ public class OrderService {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
-  // public String selectOrderIdByPaymentStatus(String paymentStatus) {
-  //   logger.info("OrderService selectOrderIdByPaymentStatus method is running");
-  // }
-
   public Optional<Order> selectOrderUnpaidByUserId(String userId) {
     logger.info("OrderService ce is running...");
     String sql = """
               SELECT * 
               FROM orders 
-              WHERE user_id = ?
+              WHERE user_id = CAST(? AS UUID) 
               """;
     Optional<Order> order = jdbcTemplate.query(sql, new OrderRowMapper(), userId)
                             .stream()
                             .findFirst();
-  
     return order;
+  }
+
+  public int countNumberOfOrderUnpaidByUserId(String userId) {
+    logger.info("FoodFlavorService selectNumberOfFlavors is running...");
+    String sql = """
+                  SELECT COUNT(*) 
+                  FROM orders 
+                  WHERE user_id = CAST(? AS UUID)
+                  AND payment_status = 'unpaid'
+                  """;
+    return jdbcTemplate.queryForObject(sql, Integer.class, userId);
   }
 
   public int insertOrderItems(OrderItem orderItem) {
     logger.info("OrderService insertOrderItems method is running...");
     String sql = """
               INSERT INTO order_items (order_id, product_id, quantity)
-              VALUES (?, CAST(? AS INTEGER) , ?) 
+              VALUES (CAST(? AS INTEGER), CAST(? AS INTEGER) , ?) 
               """;
     return jdbcTemplate.update(sql, orderItem.getOrderId(), orderItem.getProductId(), orderItem.getQuantity());
   }
   
-  public int insertOrder(Integer userId) {
+  public int insertOrder(Order order) {
     logger.info("OrderService insertOrder method is running...");
     String sql = """
-              INSERT INTO orders (user_id)
-              VALUES (?) 
+              INSERT INTO orders (user_id, total)
+              VALUES (CAST(? AS UUID), ?) 
               """;
-    return jdbcTemplate.update(sql, userId);
-    // return jdbcTemplate.update(sql, order.getUserId(), order.isFreeShipping(), OrderEnum.pending, order.getTotal());
-  }
-
-  public int insertOrderDetail(Order order) {
-    logger.info("OrderService insertOrderDetail method is running...");
-    String sql = """
-              INSERT INTO order_detail (order_id, is_free_shipping, payment_status, total)
-              VALUES (?, ?, CAST(? AS payment_status_enum), ?) 
-              """;
-    return jdbcTemplate.update(sql, order.getUserId(), order.isFreeShipping(), order.getPaymentStatus().toString(), order.getTotal());
+    return jdbcTemplate.update(sql, order.getUserId(), order.getTotal());
   }
 
   public void updateOrderItemQuantityByOrderId(Integer quantity, String orderId) {
     logger.info("OrderService updateOrderItemQuantityByOrderId method is running...");
     String sql = """
               UPDATE order_items 
-              
               SET quantity = ? 
-              where order_id = ?
+              WHERE order_id = ?
               """;
     jdbcTemplate.update(sql, quantity, orderId);
   }
-
 }

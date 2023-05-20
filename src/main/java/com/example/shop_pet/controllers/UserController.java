@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.swing.text.html.Option;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.RestController; import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.shop_pet.dto.AuthRequest;
 import com.example.shop_pet.models.User;
@@ -61,8 +58,8 @@ public class UserController {
 
   @GetMapping("/user")
   @PreAuthorize("hasAuthority('USER')")
-  public ResponseEntity<?> forUser(HttpServletRequest request) {
-    logger.info("UserController forUser method is running...");
+  public ResponseEntity<?> getUserProfile(HttpServletRequest request) {
+    logger.info("UserController getUserProfile method is running...");
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization header not found");
@@ -75,7 +72,7 @@ public class UserController {
     if (user.isPresent()) {
       Map<String, Object> map = new HashMap<>();
       map.put("user", user.orElse(null));
-      logger.info("UserController forUser method is running...");
+      logger.info("UserController getUserProfile method is running...");
       return ResponseEntity.ok(map);
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
@@ -184,10 +181,8 @@ public class UserController {
 
     Optional<User> userAuth = userService.selectUserByUsername(authRequest.getUsername()); 
     if (userAuth.isPresent()) {
-      User userBanana = userAuth.get();
-      System.out.println("User's auth info :>> " + userAuth.toString()); 
-      System.out.println("User password :>> " + userBanana.getPassword());
-      if (!isCorrectPassword(authRequest.getPassword(), userBanana.getPassword())) {
+      User userSelected = userAuth.get();
+      if (!isCorrectPassword(authRequest.getPassword(), userSelected.getPassword())) {
         map.put("errorMessage", "Your password was incorrect, please retry!");    
         return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
       } 
