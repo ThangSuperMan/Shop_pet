@@ -7,7 +7,7 @@
 
 A project for quickly building RESTful APIs using Spring Boot Java and Postgresql.
 
-By running some command, you will get a production-ready Spring Boot installed and fully configured on your machine. The app comes with many built-in features, such as authentication using JWT, request validation, API documentation, pagination, etc. For more details, check the features list below.
+By running some commands, you will get a production-ready Spring Boot installed and fully configured on your machine. The app comes with many built-in features, such as authentication using JWT, request validation, API documentation, pagination, etc. For more details, check the features list below.
 
 ## Quick Start
 
@@ -27,6 +27,8 @@ Install the dependencies and run the app:
 ```bash
 ./mvnw spring-boot:run
 ```
+
+Add enviroment variables
 
 ```bash
 cp application.yml src/main/resources

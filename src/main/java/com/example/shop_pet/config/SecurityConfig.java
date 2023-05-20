@@ -26,7 +26,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.example.shop_pet.filter.JwtAuthFilter;
 
 @Configuration
-// @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
   Logger logger = LoggerFactory.getLogger(getClass());

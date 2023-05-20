@@ -45,7 +45,7 @@ public class OrderController {
 
     OrderItem orderItems = new OrderItem(order.getId(), order.getProductId(), order.getQuantity());
 
-    int resultInsertOrder = orderService.insertOrder(order);
+    int resultInsertOrder = orderService.insertOrder(Integer.parseInt(order.getUserId()));
     // int resultInsertOrderItems = orderService.insertOrderItems(orderItems);
 
     System.out.println("resultInsertOrder :>> " + resultInsertOrder);

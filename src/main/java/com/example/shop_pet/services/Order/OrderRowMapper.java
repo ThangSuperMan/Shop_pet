@@ -2,7 +2,6 @@ package com.example.shop_pet.services.Order;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.UUID;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.Nullable;
@@ -20,8 +19,8 @@ public class OrderRowMapper implements RowMapper<Order> {
     // New
     Order order = new Order();
     order.setId(resultSet.getString("id"));
-    order.setUserId(UUID.fromString(resultSet.getString("user_id")));
-    // order.setUserId(resultSet.getString("user_id"));
+    // order.setUserId(UUID.fromString(resultSet.getString("user_id")));
+    order.setUserId(resultSet.getString("user_id"));
     order.setProductId(resultSet.getString("product_id"));
     order.setCreatedAt(resultSet.getString("created_at"));
     order.setFreeShipping(resultSet.getBoolean("is_free_shipping"));

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.swing.text.html.Option;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -136,7 +139,8 @@ public class UserController {
     HashMap<String, Object> map = new HashMap<String, Object>();
     if (userService.isUsernameExist(user.getUsername())) {
       String message = "Username: " + user.getUsername() + " exists, please choose another one!";
-      return new ResponseEntity<>(map.put("errorMessage", message), HttpStatus.INTERNAL_SERVER_ERROR);
+      map.put("errorMessage", message);
+      return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     if (!isSamePassword(user.getPassword(), user.getConfirmPassword())) {
       String message = "Password and confirm password does not match, make sure you typed it correctly!";
@@ -163,22 +167,38 @@ public class UserController {
     return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
+  public boolean isCorrectPassword( String password, String passwordEncoded) {
+    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    return bCryptPasswordEncoder.matches(password, passwordEncoded);
+  }
+
   @PostMapping("/signin")
-  // public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
   public ResponseEntity<?> authenticateAndGetToken(@RequestBody @Valid AuthRequest authRequest) {
     logger.info("/api/v1/signin just triggered!");
-
+    HashMap<String, Object> map = new HashMap<>();
     Optional<User> user = userService.selectUserByUsername(authRequest.getUsername());
     if (user.isEmpty()) {
       logger.info("User is null!");
       throw new UsernameNotFoundException("Not found this username please retry!");
     }
 
+    Optional<User> userAuth = userService.selectUserByUsername(authRequest.getUsername()); 
+    if (userAuth.isPresent()) {
+      User userBanana = userAuth.get();
+      System.out.println("User's auth info :>> " + userAuth.toString()); 
+      System.out.println("User password :>> " + userBanana.getPassword());
+      if (!isCorrectPassword(authRequest.getPassword(), userBanana.getPassword())) {
+        map.put("errorMessage", "Your password was incorrect, please retry!");    
+        return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
+      } 
+    }
+    
     Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
         authRequest.getUsername(), authRequest.getPassword()));
-    HashMap<String, Object> map = new HashMap<>();
+    logger.info("here");
+    logger.info("authentication.isAuthenticated :>> " + authentication.isAuthenticated());
     if (authentication.isAuthenticated()) {
-      logger.info("autheries :>> " + authentication.getAuthorities());
+      logger.info("authories :>> " + authentication.getAuthorities());
       String username = authRequest.getUsername();
       Optional<User> user2 = userService.selectUserByUsername(username);
       map.put("jwtToken", jwtUtils.generateToken(authRequest.getUsername()));

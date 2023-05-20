@@ -23,7 +23,7 @@ public class UserService {
   String sql = """ 
               SELECT count(*)
               FROM orders
-              where user_id
+              WHERE user_id
               """;
   int total = jdbcTemplate.queryForObject(sql, Integer.class);
   return total;
@@ -42,16 +42,16 @@ public class UserService {
     }
     return jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getEmail());
   }
-
+  
   public Optional<User> selectUserByUsername(String username) {
     logger.info("selectUserByUsername UserService is running...");
-    String sql = "select * from users where username = ?";
+    String sql = "SELECT * FROM users WHERE username = ?";
     return jdbcTemplate.query(sql, new UserRowMapper(), username).stream().findFirst();
   }
 
   public Boolean isUsernameExist(String username) {
     logger.info("isUserExists UserService is running...");
-    String sql = "select * from users where username = ?";
+    String sql = "SELECT * FROM users WHERE username = ?";
     Optional<User> user = jdbcTemplate.query(sql, new UserRowMapper(), username).stream().findFirst();
 
     return user.isPresent();
