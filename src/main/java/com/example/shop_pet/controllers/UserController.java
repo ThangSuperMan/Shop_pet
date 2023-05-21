@@ -71,7 +71,11 @@ public class UserController {
     System.out.println("User :>> " + user.toString());
     if (user.isPresent()) {
       Map<String, Object> map = new HashMap<>();
-      map.put("user", user.orElse(null));
+      User selectedUser = user.get();
+      // Ignore password
+      selectedUser.setPassword(null);
+      map.put("user", selectedUser);
+      // map.put("user", user.orElse(null));
       logger.info("UserController getUserProfile method is running...");
       return ResponseEntity.ok(map);
     } else {

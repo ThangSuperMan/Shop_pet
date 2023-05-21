@@ -74,9 +74,9 @@ public class SecurityConfig {
         .and()
         .authorizeHttpRequests()
         .requestMatchers("/api/v1/products/**", "/api/v1/geolocation", "/api/v1/users/**", 
-            "/api/v1/signin", "/api/v1/signup",
-            "/api/v1/orders/save",
-            "/api/v1/payment", "/api/v1/pay/success", "/api/v1/pay/cancel")
+                         "/api/v1/signin", "/api/v1/signup",
+                         "/api/v1/orders/**",
+                         "/api/v1/payment", "/api/v1/pay/success", "/api/v1/pay/cancel")
         .permitAll()
         .and()
         .authorizeHttpRequests()

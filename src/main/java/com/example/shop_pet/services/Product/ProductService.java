@@ -94,7 +94,7 @@ public class ProductService {
   }
 
   public Optional<Product> selectProductById(Long id) {
-    logger.info("BookService, selectProductById is running...");
+    logger.info("ProductService, selectProductById is running...");
     String sql = """
               SELECT *, to_char(created_at, 'YYYY/MM/dd HH24:MI:SS') AS created_at_formated
               FROM products 

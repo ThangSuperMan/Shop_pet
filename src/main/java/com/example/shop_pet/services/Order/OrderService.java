@@ -1,5 +1,6 @@
 package com.example.shop_pet.services.Order;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -19,6 +20,16 @@ public class OrderService {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
+  public List<OrderItem> selectOrderItemsByOrderId(Integer orderId) {
+    String sql = """
+              SELECT * 
+              FROM order_items 
+              WHERE order_id = ? 
+              """;
+    List<OrderItem> orderItems = jdbcTemplate.query(sql, new OrderItemRowMapper(), orderId);
+    return orderItems;
+  }
+
   public Optional<Order> selectOrderUnpaidByUserId(String userId) {
     logger.info("OrderService ce is running...");
     String sql = """
@@ -30,6 +41,17 @@ public class OrderService {
                             .stream()
                             .findFirst();
     return order;
+  }
+
+  public int countNumberOfOrderItemByOrderIdAndProductId(String orderId, String productId) {
+    logger.info("FoodFlavorService countNumberOfOrderItemByOrderIdAndProductId is running...");
+    String sql = """
+                  SELECT COUNT(*) 
+                  FROM order_items 
+                  WHERE order_id = CAST(? AS INTEGER)
+                  AND product_id = CAST(? AS INTEGER)
+                  """;
+    return jdbcTemplate.queryForObject(sql, Integer.class, orderId, productId);
   }
 
   public int countNumberOfOrderUnpaidByUserId(String userId) {

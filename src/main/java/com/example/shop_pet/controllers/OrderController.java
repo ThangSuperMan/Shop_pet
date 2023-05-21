@@ -1,6 +1,8 @@
 package com.example.shop_pet.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.shop_pet.models.Order;
 import com.example.shop_pet.models.OrderItem;
 import com.example.shop_pet.models.User;
+import com.example.shop_pet.models.Product;
 import com.example.shop_pet.services.Order.OrderService;
+import com.example.shop_pet.services.Product.ProductService;
 import com.example.shop_pet.services.User.UserService;
 import com.example.shop_pet.utils.JwtUtils;
 
@@ -36,28 +40,52 @@ public class OrderController {
   @Autowired JwtUtils jwtUtils;
   @Autowired UserService userService;
   @Autowired OrderService orderService;
+  @Autowired ProductService productService;
 
+  public List<OrderItem> getOrderItems(Integer orderId) {
+    List<OrderItem> orderItems = this.orderService.selectOrderItemsByOrderId(orderId);
+    return orderItems;
+  } 
 
-  @PostMapping("/orders/{userId}")
-  @GetMapping("hasAuthority('USER')")
+  @GetMapping("/orders/{userId}")
+  @PreAuthorize("hasAuthority('USER')")
   public ResponseEntity<?>getOrder (@PathVariable String userId) {
-    logger.info("OrderController getOrder method is running...");
+    logger.info("OrderController getOrder method is running");
     HashMap<String, Object> map = new HashMap<String, Object>();
     Optional<Order> order = orderService.selectOrderUnpaidByUserId(userId);
     if (order.isEmpty()) {
       String errorMessage = "You do not have any order, please add product to your cart!";
       map.put("errorMessage", errorMessage);
       return new ResponseEntity<>(map, HttpStatus.NOT_FOUND); 
+    } else {
+      Order optionalOrder = order.get();
+      // Get all order items
+      if (order.isPresent())  {
+        List<OrderItem> orderItems = getOrderItems(Integer.parseInt(optionalOrder.getId()));
+        List<Product> products = new ArrayList<>();
+        // map.put("orderItems", orderItems);
+        for (int i = 0; i <  orderItems.size(); i++) {
+          Long productId = Long.parseLong(orderItems.get(i).getProductId());
+          System.out.println("product id :>> " + productId);
+          // System.out.println("product :>> " + ); 
+          Optional<Product> optionalProduct = this.productService.selectProductById(productId);
+          if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            products.add(product);
+          }
+        }
+        map.put("products", products);
+      }
     } 
-    String errorMessage = "Selected orders successfully";
-    map.put("errorMessage", errorMessage);
+    String message = "Selected orders successfully";
+    map.put("order", order);
+    map.put("message", message);
     return new ResponseEntity<>(map, HttpStatus.OK);
   }
 
   @PostMapping("/orders/delete")
   @PreAuthorize("hasAuthority('USER')")
-  public ResponseEntity<?> deleteORder(HttpServletRequest request) {
-    String authHeader = request.getHeader("Authorization");
+  public ResponseEntity<?> deleteORder(HttpServletRequest request) { String authHeader = request.getHeader("Authorization");
     if (authHeader == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization header not found");
     }
@@ -66,10 +94,10 @@ public class OrderController {
 
     String username = jwtUtils.extractUsername(token);
     String userId = USER_ID_NOT_FOUND;
-    Optional<User> user = userService.selectUserByUsername(username);
-    if (user.isPresent()) {
-      User userSelected = user.get();
-      userId = userSelected.getId(); 
+    Optional<User> userOptional = userService.selectUserByUsername(username);
+    if (userOptional.isPresent()) {
+      User user = userOptional.get();
+      userId = user.getId(); 
       logger.info("user id from the db :>> " + userId);
     }
     
@@ -82,6 +110,11 @@ public class OrderController {
     String errorMessage = "Selected orders successfully";
     map.put("errorMessage", errorMessage);
     return new ResponseEntity<>(map, HttpStatus.OK);
+  }
+
+  public boolean isOrderItemExist(String orderId, String productId) {
+    int resultInsert = this.orderService.countNumberOfOrderItemByOrderIdAndProductId(orderId, productId);
+    return resultInsert > 0 ? true : false;
   }
 
   @PostMapping("/orders/save")
@@ -133,13 +166,22 @@ public class OrderController {
       }
 
       order.setId(orderId);
-      OrderItem orderItem = new OrderItem(order.getId(), order.getProductId(), order.getQuantity());
-      Integer resultInsertOrderItems = orderService.insertOrderItems(orderItem);
-      if (resultInsertOrderItems > 0) {
-        logger.info("Insert OrderItems successfully");
-        String message = "Insert OrderItems successfully";
-        map.put("messageTwo", message);
-      }
+      System.out.println("isOrderItemExist :>> " + isOrderItemExist(order.getId(), order.getProductId()));
+
+      // If the product does not exists we will insert to the table sql
+      if (!isOrderItemExist(order.getId(), order.getProductId())) {
+        OrderItem orderItem = new OrderItem(order.getId(), order.getProductId(), order.getQuantity());
+        Integer resultInsertOrderItems = orderService.insertOrderItems(orderItem);
+        if (resultInsertOrderItems > 0) {
+          logger.info("Insert OrderItems successfully");
+          String message = "Insert OrderItems successfully";
+          map.put("messageTwo", message);
+        }
+
+        String message = "this product exists in the cart, please choose another one, thank you.";
+        map.put("errorMessage", message);
+        return new ResponseEntity<>(map, HttpStatus.CONFLICT);
+      } 
     }
 
     return new ResponseEntity<>(map, HttpStatus.OK);

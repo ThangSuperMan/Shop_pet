@@ -91,8 +91,6 @@ public class ProductController {
   }
 
   @GetMapping("/products/{productTitle}")
-  // @GetMapping("/products/{id}")
-  // public ResponseEntity<?> getProduct(@PathVariable Long id) {
   public ResponseEntity<?> getProduct(@PathVariable String productTitle) {
     logger.info("ProductController getProduct method is running...");
     // Convert from product-title -> product title
@@ -100,7 +98,6 @@ public class ProductController {
     System.out.println("productTitle :>> " + productTitle);
 
     Optional<Product> product = productService.selectProductByTitle(originalProductTitle);
-    // Optional<Product> product = productService.selectProductById(id);
     logger.info("product :>> " + product);
     
     HashMap<String, Object> map = new HashMap<String, Object>();
@@ -111,8 +108,6 @@ public class ProductController {
       map.put("productDetail", productDetail);
       map.put("productImages", productImages);
     });
-    // Optional<ProductDetail> productDetail = productDetailService.selectProductDetailById(id);
-    // List<ProductImage> productImages = productImageService.selectProductImages(id);
 
     if (product.isPresent()) {
       Product prod = product.get();
