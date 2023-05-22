@@ -13,8 +13,8 @@ public class OrderItemRowMapper implements RowMapper<OrderItem> {
   @Nullable
   public OrderItem mapRow(ResultSet resultSet, int rowNum) throws SQLException {
     return new OrderItem(
-      resultSet.getString("order_id"), 
-      resultSet.getString("product_id"),
+      resultSet.getLong("order_id"), 
+      resultSet.getLong("product_id"),
       resultSet.getInt("quantity")
     );
   }

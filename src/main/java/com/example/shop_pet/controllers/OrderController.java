@@ -33,8 +33,10 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/v1")
 public class OrderController {
-  private final String ORDER_ID_NOT_FOUND = "-1"; private final String USER_ID_NOT_FOUND = "-1"; private static Integer FIRST_ORDER = 1;
-  private final int BEGIN_INDEX = 7;
+  private final Long ORDER_ID_NOT_FOUND = (long) -1;
+  private final Long USER_ID_NOT_FOUND =  (long) -1;
+  private static Integer FIRST_ORDER = 1;
+  private final Integer BEGIN_INDEX = 7;
   Logger logger = LoggerFactory.getLogger(UserController.class);
 
   @Autowired JwtUtils jwtUtils;
@@ -42,7 +44,7 @@ public class OrderController {
   @Autowired OrderService orderService;
   @Autowired ProductService productService;
 
-  public List<OrderItem> getOrderItems(Integer orderId) {
+  public List<OrderItem> getOrderItems(Long orderId) {
     List<OrderItem> orderItems = this.orderService.selectOrderItemsByOrderId(orderId);
     return orderItems;
   } 
@@ -54,26 +56,29 @@ public class OrderController {
     HashMap<String, Object> map = new HashMap<String, Object>();
     Optional<Order> order = orderService.selectOrderUnpaidByUserId(userId);
     if (order.isEmpty()) {
-      String errorMessage = "You do not have any order, please add product to your cart!";
-      map.put("errorMessage", errorMessage);
-      return new ResponseEntity<>(map, HttpStatus.NOT_FOUND); 
+      String warningMessage = "You do not have any order, please add product to your cart!";
+      logger.warn(warningMessage);
+      // map.put("errorMessage", errorMessage);
+      return new ResponseEntity<>(map, HttpStatus.OK); 
     } else {
       Order optionalOrder = order.get();
       // Get all order items
       if (order.isPresent())  {
-        List<OrderItem> orderItems = getOrderItems(Integer.parseInt(optionalOrder.getId()));
+        List<OrderItem> orderItems = getOrderItems(optionalOrder.getId());
         List<Product> products = new ArrayList<>();
-        // map.put("orderItems", orderItems);
-        for (int i = 0; i <  orderItems.size(); i++) {
-          Long productId = Long.parseLong(orderItems.get(i).getProductId());
+        for (int i = 0; i < orderItems.size(); i++) {
+          Long productId = orderItems.get(i).getProductId();
           System.out.println("product id :>> " + productId);
           // System.out.println("product :>> " + ); 
+          // Return oer items and product item
           Optional<Product> optionalProduct = this.productService.selectProductById(productId);
           if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
             products.add(product);
+            // New
           }
         }
+        map.put("orderItems", orderItems);
         map.put("products", products);
       }
     } 
@@ -93,11 +98,11 @@ public class OrderController {
     HashMap<String, Object> map = new HashMap<String, Object>();
 
     String username = jwtUtils.extractUsername(token);
-    String userId = USER_ID_NOT_FOUND;
+    Long userId = USER_ID_NOT_FOUND;
     Optional<User> userOptional = userService.selectUserByUsername(username);
     if (userOptional.isPresent()) {
       User user = userOptional.get();
-      userId = user.getId(); 
+      userId = Long.parseLong(user.getId()); 
       logger.info("user id from the db :>> " + userId);
     }
     
@@ -112,7 +117,7 @@ public class OrderController {
     return new ResponseEntity<>(map, HttpStatus.OK);
   }
 
-  public boolean isOrderItemExist(String orderId, String productId) {
+  public boolean isOrderItemExist(Long orderId, Long productId) {
     int resultInsert = this.orderService.countNumberOfOrderItemByOrderIdAndProductId(orderId, productId);
     return resultInsert > 0 ? true : false;
   }
@@ -134,7 +139,7 @@ public class OrderController {
       // Get user id -> based on user id -> get order id with payment_status is `unpaid`
       System.out.println("user id form frontend :>> " + order.getUserId());
       Optional<Order> selectedOrder = orderService.selectOrderUnpaidByUserId(order.getUserId());
-      String orderId = ORDER_ID_NOT_FOUND;
+      Long orderId = ORDER_ID_NOT_FOUND;
 
       if (selectedOrder.isPresent()) {
         Order orderFromDB = selectedOrder.get();
@@ -159,7 +164,7 @@ public class OrderController {
     } else {
       logger.info("This order exists before");
       Optional<Order> selectedOrder = orderService.selectOrderUnpaidByUserId(order.getUserId());
-      String orderId = "-1";
+      Long orderId = (long) -1;
       if (selectedOrder.isPresent()) {
         Order orderFromDB = selectedOrder.get();
         orderId = orderFromDB.getId();
@@ -178,11 +183,17 @@ public class OrderController {
           map.put("messageTwo", message);
         }
 
-        String message = "this product exists in the cart, please choose another one, thank you.";
+        return new ResponseEntity<>(map, HttpStatus.OK);
+        // String message = "this product exists in the cart, please choose another one, thank you.";
+        // map.put("errorMessage", message);
+      } 
+      else {
+        String message = "This product exists in the cart, please choose another one, thank you.";
+        logger.info("This product exists in the cart, please choose another one, thank you.");
         map.put("errorMessage", message);
         return new ResponseEntity<>(map, HttpStatus.CONFLICT);
-      } 
-    }
+      }
+    } 
 
     return new ResponseEntity<>(map, HttpStatus.OK);
   }

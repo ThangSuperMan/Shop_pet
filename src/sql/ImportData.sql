@@ -37,6 +37,34 @@ begin
 end;
 $$ language plpgsql;
 
+create or replace function get_user_details(user_id uuid)
+  returns table (
+    id uuid,
+    username varchar(45),
+    password char(60),
+    email varchar(45),
+    address varchar(200),
+    phone varchar(20),
+    avatar_url varchar(200),
+    gg_id varchar(50),
+    fb_id varchar(50),
+    role role_enum,
+    created_at timestamptz,
+    updated_at timestamptz
+  )
+as $$
+begin
+  return query
+    select *
+    from users
+    where users.id = user_id;
+end;
+$$
+language plpgsql;
+
+-- Solved
+-- select * from get_user_details('250d51ea-3021-4ad6-a5c7-3ad47756d413');
+
 create table if not exists users (
   id uuid default uuid_generate_v4(),
   username varchar(45) not null,
@@ -57,6 +85,36 @@ insert into users (id, username, avatar_url, email, password, role) values
 ('5c98778f-692f-4c94-a564-cb45662bfe41', 'thangphan', 'https://images-na.ssl-images-amazon.com/images/S/influencer-profile-image-prod/logo/influencer-275f68b5_1662012947804_original._CR0,3,576,576_._FMjpg_.jpeg', 'thangphan@gmail.com', '$2a$10$UVAD4O3IGOS0q1Ak1mmgp.6SdpUPQDzpukLkWAJ/akg9HprTVtEVO','ADMIN'),
 ('250d51ea-3021-4ad6-a5c7-3ad47756d413', 'ngocphan', 'https://images-na.ssl-images-amazon.com/images/S/influencer-profile-image-prod/logo/influencer-275f68b5_1662012947804_original._CR0,3,576,576_._FMjpg_.jpeg', 'ngocphan@gmail.com', '$2a$10$udD2nZ30k95m2JN8te3oQ.4Wugu5UdDDMGOf1fx6PY1qwLajT2LO6','USER');
 
+-- Update email user
+create or replace procedure update_user_email(user_id_value uuid, new_email_value varchar(45))
+language plpgsql
+as $$
+begin
+  update users
+  set email = new_email_value
+  where id = user_id_value;
+end;
+$$;
+
+-- Update the email of user ngocphan
+-- call update_user_email('250d51ea-3021-4ad6-a5c7-3ad47756d413', 'new_email@gmail.com');
+
+-- Update phone number 
+
+create or replace procedure update_user_phone(user_id_value uuid, new_phone_value varchar(20))
+language plpgsql
+as $$
+begin
+  update users
+  set phone = new_phone_value
+  where id = user_id_value;
+end;
+$$;
+
+-- Change the phone number of user from null -> 12345
+-- select id, username, phone from users where username = 'ngocphan';
+-- call update_user_phone('250d51ea-3021-4ad6-a5c7-3ad47756d413', '12345');
+
 create table if not exists brands (
   id serial,
   name varchar(100),
@@ -69,6 +127,35 @@ insert into brands (id, name) values ('2', 'Cesar');
 insert into brands (id, name) values ('3', 'Friskies'); 
 insert into brands (id, name) values ('4', 'Beneful'); 
 insert into brands (id, name) values ('5', 'IRIS USA, Inc.'); 
+
+-- Update the name brand
+create or replace procedure update_brand_name(brand_id_value integer, new_name_value varchar(100))
+language plpgsql
+as $$
+begin
+  update brands
+  set name = new_name_value
+  where id = brand_id_value;
+end;
+$$;
+
+create or replace function check_brand_name_length()
+returns trigger as $$
+begin
+  if length(new.name) > 20 then
+    raise exception 'brand name cannot exceed 20 characters';
+  end if;
+  return new;
+end;
+$$ language plpgsql;
+
+-- Trigger check the length of column name have to be less than 20 characters 
+create trigger brand_name_length_trigger
+before insert on brands
+for each row
+execute function check_brand_name_length();
+
+-- call update_brand_name(1, 'new_name_here');
 
 create table if not exists inventory (
   id serial,
@@ -112,6 +199,22 @@ create table if not exists products (
   constraint fk_product_inventory foreign key(inventory_id) references inventory(id) on delete set null,
   constraint fk_product_category_pet_supplie foreign key(category_pet_supplie_id) references category_pet_supplies(id) on delete set null
 );
+
+-- VIEW
+create view all_products as
+select * from products;
+
+-- STORE PROCEDURE
+create or replace procedure get_all_products()
+as $$
+begin
+  select *
+  from products;
+end;
+$$
+language plpgsql;
+
+-- call select_products();
 
 -- TRIGGER FOR PRODUCT TABLE 
 create trigger products_updated_at
@@ -183,6 +286,20 @@ create table if not exists product_images (
   primary key (id),
   constraint fk_product_images foreign key(product_id) references products(id) on delete set null
 );
+
+create or replace function get_product_images(product_id_value integer)
+returns setof product_images
+language plpgsql
+as $$
+begin
+  return query
+    select *
+    from product_images
+    where product_id = product_id_value;
+end;
+$$;
+
+-- call get_product_images(1);
 
 insert into product_images (id, product_id, url) values 
 -- Product 1
@@ -273,6 +390,32 @@ create table if not exists reviews (
   constraint fk_reviews_user foreign key(user_id) references users(id) on delete cascade
 );
 
+
+-- FUNCTION
+create function get_product_reviews(p_product_id integer)
+  returns table (
+    id integer,
+    product_id integer,
+    user_id uuid,
+    title text,
+    body text,
+    rating smallint,
+    created_at timestamptz,
+    updated_at timestamptz
+  )
+as $$
+begin
+  return query
+  select id, product_id, user_id, title, body, rating, created_at, updated_at
+  from reviews
+  where product_id = p_product_id;
+end;
+$$ language plpgsql;
+
+-- VIEW
+-- CREATE VIEW product_reviews_view AS
+-- SELECT * FROM get_product_reviews(123);
+
 insert into reviews (id, product_id, user_id, title, body, rating) values 
 (1, 1, '5c98778f-692f-4c94-a564-cb45662bfe41', 'Great product!', 'I love this product. It works really well and looks great too.', 5),
 (2, 2, '5c98778f-692f-4c94-a564-cb45662bfe41', 'Not what I expected', 'This product did not meet my expectations. It was difficult to use and did not work as advertised.', 2),
@@ -335,19 +478,18 @@ insert into product_flavors (product_id, pet_food_flavor_id) values
 -- Functions
 create or replace function get_products_sorted_limit_offset(limit_value INT, offset_value INT)
   returns table (
-    id INT,
-    brand_id INT,
-    title VARCHAR(150),
-    price NUMERIC(10, 2),
-    image_url VARCHAR(100),
+    id int,
+    brand_id int,
+    title varchar(150),
+    price numeric(10, 2),
+    image_url varchar(100),
     money_type type_money_enum,
-    created_at TIMESTAMPTZ,
-    updated_at TIMESTAMPTZ
+    created_at timestamptz,
+    updated_at timestamptz
   )
 as $$
 begin
   return query
-    -- SELECT p.id AS product_id, p.brand_id, p.inventory_id, p.category_pet_supplie_id, p.title, p.price, p.image_url, p.money_type, p.created_at, p.updated_at
     select p.id, p.brand_id, p.title, p.price, p.image_url, p.money_type, p.created_at, p.updated_at
     from products p
     order by p.id

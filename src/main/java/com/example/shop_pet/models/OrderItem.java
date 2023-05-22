@@ -9,11 +9,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OrderItem {
 
-  private String orderId;
-  private String productId;
+  private Long orderId;
+  private Long productId;
   private int quantity;
 
-  public OrderItem(String orderId, String productId, int quantity) {
+  public OrderItem(Long orderId, Long productId, int quantity) {
     this.orderId = orderId;
     this.productId = productId;
     this.quantity = quantity;

@@ -20,7 +20,7 @@ public class OrderService {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
-  public List<OrderItem> selectOrderItemsByOrderId(Integer orderId) {
+  public List<OrderItem> selectOrderItemsByOrderId(Long orderId) {
     String sql = """
               SELECT * 
               FROM order_items 
@@ -43,7 +43,7 @@ public class OrderService {
     return order;
   }
 
-  public int countNumberOfOrderItemByOrderIdAndProductId(String orderId, String productId) {
+  public int countNumberOfOrderItemByOrderIdAndProductId(Long orderId, Long productId) {
     logger.info("FoodFlavorService countNumberOfOrderItemByOrderIdAndProductId is running...");
     String sql = """
                   SELECT COUNT(*) 
@@ -59,7 +59,7 @@ public class OrderService {
     String sql = """
                   SELECT COUNT(*) 
                   FROM orders 
-                  WHERE user_id = CAST(? AS UUID)
+                  WHERE user_id = CAST(? AS UUID) 
                   AND payment_status = 'unpaid'
                   """;
     return jdbcTemplate.queryForObject(sql, Integer.class, userId);

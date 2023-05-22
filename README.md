@@ -47,9 +47,10 @@ cp application.yml src/main/resources
 
 - **Sql database**: [Postgresql](https://www.postgresql.org)
 - **Authentication and authorization**: using [JWT (Json web token)](https://jwt.io) with library [jsonwebtoken](https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt/0.9.1)
-- **API documentation**: with [SpringDoc OpenAPI Starter WebMVC UI](https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui/2.0.0-M2)
+- **API documentation**: with Swagger, [SpringDoc OpenAPI Starter WebMVC UI](https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui/2.0.0-M2)
 - **Security**: set security HTTP headers using [Spring Boot Starter Security](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security/1.2.5.RELEASE)
 - **Paypal payment**: integrate payment paypal gateway using [Paypal SDK](https://mvnrepository.com/artifact/com.paypal.sdk/rest-api-sdk/1.6.0)
+- **BCryptPassword**: integrate BCryptPassword encode with 63 long characters [Spring Security](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security/3.1.0)
 
 ## Commands
 
