@@ -49,6 +49,16 @@ public class OrderController {
     return orderItems;
   } 
 
+  @GetMapping("/orders/order_items/{orderId}")
+  @PreAuthorize("hasAuthority('USER')")
+  public ResponseEntity<?>getOrderItemsByOrderId (@PathVariable Long orderId) {
+    logger.info("OrderController getOrderItemsByOrderId method is running");
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    List<OrderItem> orderItems = getOrderItems(orderId);
+    map.put("orderItems", orderItems);
+    return new ResponseEntity<>(map, HttpStatus.OK); 
+  }
+
   @GetMapping("/orders/{userId}")
   @PreAuthorize("hasAuthority('USER')")
   public ResponseEntity<?>getOrder (@PathVariable String userId) {
