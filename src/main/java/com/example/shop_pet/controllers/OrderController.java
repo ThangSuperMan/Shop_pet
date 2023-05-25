@@ -14,20 +14,20 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.shop_pet.dto.AuthOrderItem;
 import com.example.shop_pet.models.Order;
 import com.example.shop_pet.models.OrderItem;
-import com.example.shop_pet.models.User;
 import com.example.shop_pet.models.Product;
 import com.example.shop_pet.services.Order.OrderService;
 import com.example.shop_pet.services.Product.ProductService;
 import com.example.shop_pet.services.User.UserService;
 import com.example.shop_pet.utils.JwtUtils;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -66,6 +66,7 @@ public class OrderController {
       if (order.isPresent())  {
         List<OrderItem> orderItems = getOrderItems(optionalOrder.getId());
         List<Product> products = new ArrayList<>();
+
         for (int i = 0; i < orderItems.size(); i++) {
           Long productId = orderItems.get(i).getProductId();
           System.out.println("product id :>> " + productId);
@@ -75,7 +76,6 @@ public class OrderController {
           if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
             products.add(product);
-            // New
           }
         }
         map.put("orderItems", orderItems);
@@ -88,33 +88,21 @@ public class OrderController {
     return new ResponseEntity<>(map, HttpStatus.OK);
   }
 
-  @PostMapping("/orders/delete")
+  @PutMapping("/orders/update")
   @PreAuthorize("hasAuthority('USER')")
-  public ResponseEntity<?> deleteORder(HttpServletRequest request) { String authHeader = request.getHeader("Authorization");
-    if (authHeader == null) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization header not found");
-    }
-    String token = authHeader.substring(BEGIN_INDEX);
+  public ResponseEntity<?> updateOrderItem(@RequestBody @Valid OrderItem orderItem) {
+    logger.info("OrderService updateOrderItem is running");
+    int updateResult = orderService.updateQuantityOrderItem(orderItem);
     HashMap<String, Object> map = new HashMap<String, Object>();
-
-    String username = jwtUtils.extractUsername(token);
-    Long userId = USER_ID_NOT_FOUND;
-    Optional<User> userOptional = userService.selectUserByUsername(username);
-    if (userOptional.isPresent()) {
-      User user = userOptional.get();
-      userId = Long.parseLong(user.getId()); 
-      logger.info("user id from the db :>> " + userId);
+    if (updateResult > 0) {
+      logger.info("Update order item successfully");
+      String message = "Update order item successfully";
+      map.put("message", message);
+      return new ResponseEntity<>(map, HttpStatus.OK);
     }
-    
-    // Need product id and the order id -> Help we know exactly which order_items 
-    // should update
-      
-    // token -> username
-    // get username
-
-    String errorMessage = "Selected orders successfully";
-    map.put("errorMessage", errorMessage);
-    return new ResponseEntity<>(map, HttpStatus.OK);
+    String message = "Update order item unsuccessfully";
+    map.put("message", message);
+    return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   public boolean isOrderItemExist(Long orderId, Long productId) {
@@ -195,6 +183,27 @@ public class OrderController {
       }
     } 
 
+    return new ResponseEntity<>(map, HttpStatus.OK);
+  }
+
+  // Delete order item
+  @PostMapping("/orders/delete")
+  @PreAuthorize("hasAuthority('USER')")
+  public ResponseEntity<?> deleteOrderItem(@RequestBody @Valid AuthOrderItem orderItem) { 
+    logger.info("OrderController deleteOrderItem method is running");
+    System.out.println("here");
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    System.out.println("orderItem :>> " + orderItem.toString());
+    int deleteResult = this.orderService.deleteOrderItem(orderItem);
+    if (deleteResult > 0) {
+      logger.info("Delete order item successfully");
+      String message = "Delete order item successfully";
+      map.put("message", message);
+    } else {
+      logger.info("Delete order item unsuccessfully");
+      String message = "Delete order item unsuccessfully";
+      map.put("message", message);
+    }
     return new ResponseEntity<>(map, HttpStatus.OK);
   }
 }

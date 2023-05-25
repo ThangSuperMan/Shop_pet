@@ -16,7 +16,7 @@ public class UserService {
   private JdbcTemplate jdbcTemplate;
   
   public int insertUser(User user) {
-    logger.info("insertUser service is running...");
+    logger.info("UserService insertUser is running");
     String sql = """
                   INSERT INTO users (username, password, email)
                   VALUES (?, ?, ?)
@@ -39,7 +39,6 @@ public class UserService {
     logger.info("isUserExists UserService is running...");
     String sql = "SELECT * FROM users WHERE username = ?";
     Optional<User> user = jdbcTemplate.query(sql, new UserRowMapper(), username).stream().findFirst();
-
     return user.isPresent();
   }
 }

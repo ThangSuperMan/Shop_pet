@@ -69,7 +69,7 @@ public class ProductController {
 
     Integer offset = pageable.getPageSize() * (pageable.getPageNumber() - 1);
     List<Product> products = productService.selectProducts(pageable, offset);
-    addSeoProductTiles(products);
+    // addSeoProductTiles(products);
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("products", products);
     if (totalPages == 0) {
