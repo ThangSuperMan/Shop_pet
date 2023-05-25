@@ -7,12 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.shop_pet.services.Paypal.PaypalService;
 import com.paypal.api.payments.Links;
@@ -32,6 +34,7 @@ public class PaymentController {
   PaypalService paypalService;
 
   @PostMapping("/payment")
+  @PreAuthorize("hasAuthority('USER')")
   public ResponseEntity<?> payment(@RequestBody com.example.shop_pet.models.Payment order) throws PayPalRESTException {
     logger.info("PaymentController payment method is running");
     Payment payment = paypalService.createPayment(order.getTotal(), order.getCurrency(), order.getMethod(), order.getIntent(), order.getDescription(), BASE_URL + CANCEL_URL, BASE_URL + SUCCESS_URL);
@@ -62,6 +65,11 @@ public class PaymentController {
         Payment payment = paypalService.executePayment(paymentId, payerId);
         System.out.println(payment.toJSON());
         if (payment.getState().equals("approved")) {
+          // Redirect to the frontend site
+          RedirectView redirectView = new RedirectView();
+          // Font end url success page
+          String successPaymentUrlPage = "http://localhost:4200/api/"
+          redirectView.setUrl()
             return "success";
         }
     } catch (PayPalRESTException e) {
