@@ -68,8 +68,8 @@ public class PaymentController {
           // Redirect to the frontend site
           RedirectView redirectView = new RedirectView();
           // Font end url success page
-          String successPaymentUrlPage = "http://localhost:4200/api/"
-          redirectView.setUrl()
+          // String successPaymentUrlPage = "http://localhost:4200/shop/hello"
+          // redirectView.setUrl()
             return "success";
         }
     } catch (PayPalRESTException e) {

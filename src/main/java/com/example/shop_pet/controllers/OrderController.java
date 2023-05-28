@@ -28,13 +28,14 @@ import com.example.shop_pet.services.Product.ProductService;
 import com.example.shop_pet.services.User.UserService;
 import com.example.shop_pet.utils.JwtUtils;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
 public class OrderController {
   private final Long ORDER_ID_NOT_FOUND = (long) -1;
-  private final Long USER_ID_NOT_FOUND =  (long) -1;
+  // private final Long USER_ID_NOT_FOUND =  (long) -1;
   private static Integer FIRST_ORDER = 1;
   private final Integer BEGIN_INDEX = 7;
   Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -48,6 +49,30 @@ public class OrderController {
     List<OrderItem> orderItems = this.orderService.selectOrderItemsByOrderId(orderId);
     return orderItems;
   } 
+  
+  // Auto get the user_id based on the http request header
+  @GetMapping("/orders/order_items/authenticated")
+  @PreAuthorize("hasAuthority('USER')")
+  public ResponseEntity<?>getOrderItemsByAccessToken(HttpServletRequest request) {
+    logger.info("OrderController getOrderItemsByAccessToken method is running...");
+    String authHeader = request.getHeader("Authorization");
+    if (authHeader == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization header not found");
+    }
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    String token = authHeader.substring(BEGIN_INDEX);
+    System.out.println("token :>> " + token);
+    String username = jwtUtils.extractUsername(token);
+    System.out.println("username after extract from token :>> " + username);
+    List<OrderItem> orderItems = orderService.selectOrderItemByUsername(username);
+    logger.info("Order Items :>> ", orderItems);
+    if (!orderItems.isEmpty()) {
+      map.put("orderItems", orderItems);
+      return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+    map.put("orderItems", orderItems);
+    return new ResponseEntity<>(map, HttpStatus.OK);
+  }
 
   @GetMapping("/orders/order_items/{orderId}")
   @PreAuthorize("hasAuthority('USER')")
@@ -68,7 +93,7 @@ public class OrderController {
     if (order.isEmpty()) {
       String warningMessage = "You do not have any order, please add product to your cart!";
       logger.warn(warningMessage);
-      // map.put("errorMessage", errorMessage);
+      map.put("warningMessage", warningMessage);
       return new ResponseEntity<>(map, HttpStatus.OK); 
     } else {
       Order optionalOrder = order.get();
@@ -80,8 +105,6 @@ public class OrderController {
         for (int i = 0; i < orderItems.size(); i++) {
           Long productId = orderItems.get(i).getProductId();
           System.out.println("product id :>> " + productId);
-          // System.out.println("product :>> " + ); 
-          // Return oer items and product item
           Optional<Product> optionalProduct = this.productService.selectProductById(productId);
           if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();

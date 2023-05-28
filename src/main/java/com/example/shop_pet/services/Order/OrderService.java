@@ -67,6 +67,24 @@ public class OrderService {
     return orderItems;
   }
 
+  public List<OrderItem> selectOrderItemByUsername(String username) {
+    String sql = """
+               SELECT * 
+               FROM (
+                 SELECT username, payment_status, orders.id as order_id 
+                 FROM users 
+                 LEFT JOIN orders ON orders.user_id = users.id
+                 AND payment_status = 'unpaid'
+                 WHERE username = ?
+                 ) AS order_user 
+                 LEFT JOIN order_items 
+                 ON order_items.order_id = order_user.order_id;
+              """;
+
+    List<OrderItem> orderItems = jdbcTemplate.query(sql, new OrderItemRowMapper(), username);
+    return orderItems;
+  }
+
   public int countNumberOfOrderItemByOrderIdAndProductId(Long orderId, Long productId) {
     logger.info("FoodFlavorService countNumberOfOrderItemByOrderIdAndProductId is running...");
     String sql = """
