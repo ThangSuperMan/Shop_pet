@@ -28,17 +28,43 @@ public class UserService {
     }
     return jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getEmail());
   }
+
+  public int updateRefreshTokenByUsername(String username, String refreshToken) {
+    logger.info("UserService updateRefreshTokenByUsername is running");
+    String sql = """
+                  UPDATE users 
+                  SET refresh_token = ?
+                  WHERE username = ?
+                """;
+    return jdbcTemplate.update(sql, refreshToken, username);
+  }
   
   public Optional<User> selectUserByUsername(String username) {
-    logger.info("selectUserByUsername UserService is running...");
+    logger.info("selectUserByUsername UserService is running");
     String sql = "SELECT * FROM users WHERE username = ?";
     return jdbcTemplate.query(sql, new UserRowMapper(), username).stream().findFirst();
   }
 
   public Boolean isUsernameExist(String username) {
-    logger.info("isUserExists UserService is running...");
-    String sql = "SELECT * FROM users WHERE username = ?";
+    logger.info("isUserExists UserService is running");
+    String sql = """
+                    SELECT *
+                    FROM users
+                    WHERE username = ?
+                  """;
     Optional<User> user = jdbcTemplate.query(sql, new UserRowMapper(), username).stream().findFirst();
     return user.isPresent();
   }
+
+  // public Boolean isRefreshTokenExist(String username) {
+  //   logger.info("isRefreshTokenExist UserService is running...");
+  //   String sql = """
+  //                   SELECT *
+  //                   FROM users
+  //                   WHERE username = ?
+  //                 """;
+  //   Optional<User> user = jdbcTemplate.query(sql, new UserRowMapper(), username).stream().findFirst();
+  //   return user.isPresent();
+  // }
+
 }

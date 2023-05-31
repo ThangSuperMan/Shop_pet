@@ -19,6 +19,8 @@ public class User {
   @Size(max = 30, message = "Your password is too long, please make sure it store maximum at 30 characters!")
   private String password;
 
+  private String refreshToken;
+
   @NotNull(message = "confirmPassword shouldn't be null")
   private String confirmPassword;
 

@@ -45,12 +45,12 @@ begin
 end;
 $$ language plpgsql;
 
-
 create table if not exists users (
   id uuid default uuid_generate_v4(),
   username varchar(45) not null,
   unique (username),
   password char(60) not null,
+  refresh_token char(135),
   email varchar(45),
   address varchar(200),
   phone varchar(20) default null,

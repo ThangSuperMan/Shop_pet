@@ -12,7 +12,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthRequest {
-  @NotNull(message = "Username shouldn't be null!") private String username;
+  @NotNull(message = "Username shouldn't be null!") 
+  private String username;
+
   @NotNull(message = "Password shouldn't be null!")
   @Size(min = 5,
       message = "Your password is too short, please make sure it store at least 5 characters!")

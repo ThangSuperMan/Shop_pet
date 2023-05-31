@@ -37,7 +37,6 @@ public class ProductService {
   }
 
   public List<Product> selectProducts(Pageable pageable, Integer offset) {
-    // Views with functions
     logger.info("ProductService selectProducts is running...");
     String pageSql = """
                     SELECT * 
@@ -45,28 +44,6 @@ public class ProductService {
                     ORDER BY id
                     LIMIT ? OFFSET ?
                     """;
-    // String pageSql = """
-    //                  CREATE OR REPLACE VIEW products_sorted_limit_offset_view AS
-    //                  SELECT * 
-    //                  FROM get_products_sorted_limit_offset($1, $2)
-    //                 """;
-
-    // String sqlCreateView = "CREATE OR REPLACE VIEW products_sorted_limit_offset_view AS " +
-    //          "SELECT * FROM get_products_sorted_limit_offset($1, $2)";
-    // CREATE OR REPLACE VIEW products_sorted_limit_offset_view AS SELECT * FROM get_products_sorted_limit_offset(10, 0);
-
-    // regenerateView(pageable, offset);
-    // String sqlGetDataFromView = "select * from products_sorted_limit_offset_view";
-
-    // int limitValue = 10;
-    // int offsetValue = 0;
-
-    // jdbcTemplate.execute(sqlCreateView, (PreparedStatementCallback<Object>) ps -> {
-    //     ps.setInt(1, pageable.getPageSize());
-    //     ps.setInt(2, offset);
-    //     return ps.execute();
-    // });
-
     List<Product> products = jdbcTemplate.query(pageSql, new ProductRowMapper(), new Object[] {pageable.getPageSize(), offset});
     return products;
   }

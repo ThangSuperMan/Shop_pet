@@ -13,17 +13,23 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController; import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
+import com.example.shop_pet.config.UserInfoUserDetailsService;
 import com.example.shop_pet.dto.AuthRequest;
+import com.example.shop_pet.dto.RefreshTokenRequest;
 import com.example.shop_pet.models.User;
 import com.example.shop_pet.services.User.UserService;
 import com.example.shop_pet.utils.JwtUtils;
@@ -42,6 +48,8 @@ public class UserController {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
+
+  @Autowired UserInfoUserDetailsService userDetailsService;
 
   @Autowired
   private UserService userService;
@@ -201,11 +209,62 @@ public class UserController {
       String username = authRequest.getUsername();
       Optional<User> user2 = userService.selectUserByUsername(username);
       map.put("jwtToken", jwtUtils.generateToken(authRequest.getUsername()));
+      map.put("jwtRefreshToken", jwtUtils.generateRefreshToken(authRequest.getUsername()));
+      String jwtRefreshToken = jwtUtils.generateRefreshToken(authRequest.getUsername());;
       map.put("user", user2);
+      if (jwtRefreshToken.length() == 135) {
+        int updateRefresTokenResult = userService.updateRefreshTokenByUsername(authRequest.getUsername(), jwtRefreshToken);
+        if (updateRefresTokenResult > 0) {
+          logger.info("updateRefresTokenResult successfully");
+        }
+      }
       return new ResponseEntity<>(map, HttpStatus.OK);
     } else {
       throw new UsernameNotFoundException("invalid user request!");
     }
+  }
+
+  @PostMapping("/refresh-token") 
+  @PreAuthorize("hasAuthority('USER')")
+  public ResponseEntity<?> refreshToken(HttpServletRequest request, @RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
+    logger.info("UserControlle refreshToken method is running");
+    HashMap<String, Object> map = new HashMap<>();
+
+//     String authHeader = request.getHeader("Authorization");
+//     String token = null;
+//     String username = null;
+//     System.out.println("authHeader :>> " + authHeader);
+//     System.out.println("token :>> " + token);
+
+//     if (authHeader != null && authHeader.startsWith("Bearer ")) {
+//       token = authHeader.substring(BEGIN_INDEX);
+//       System.out.println("token substring :>> " + token);
+//       username = jwtUtils.extractUsername(token);
+//       System.out.println("username extracted from token :>> " + username);
+//     }
+
+//     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+//       UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//       if (jwtUtils.isTokenValid(token, userDetails)) {
+//         logger.warn("is refresh token token valid :>> " + jwtUtils.isTokenValid(token, userDetails));
+//         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+//             userDetails, null, userDetails.getAuthorities());
+//         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//         String newAccessToken = jwtUtils.generateToken(username);
+//         logger.warn("newAccessToken :>> " + newAccessToken);
+//         Boolean isTokenExpired = jwtUtils.isTokenExpired(refreshTokenRequest.getToken());
+//         logger.warn("isTokenExpired :>> " + isTokenExpired);
+//         map.put("newAccessToken", newAccessToken);
+//         SecurityContextHolder.getContext().setAuthentication(authToken);
+//       } 
+//     }
+
+    // Validated in the pre auth user before
+    String username = jwtUtils.extractUsername(refreshTokenRequest.getToken());
+    logger.warn("Username banana :>> " + username);
+    String newAccessToken = jwtUtils.generateToken(username);
+    map.put("newAccessToken", newAccessToken);
+    return new ResponseEntity<>(map, HttpStatus.OK);
   }
 
   @GetMapping("/**")
